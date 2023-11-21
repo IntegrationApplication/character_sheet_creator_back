@@ -22,17 +22,27 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
         [HttpGet(Name = "GetCharacter")]
-        public async Task<Character> Get()
+        public async Task<Game> Get()
         {
-            Character test = new Character();
+
+            Game test = new Game();
+            Character MJChar = new Character { Name = "Billy" };
+            Player MJ = new Player { ID  = 1, IDDiscord = 18 , Characters = new List<Character>() };
+            MJ.Characters.Add(MJChar);
+            
+
+            test.MJ = MJ;
+
+
             return test;
         }
 
+        /*
         [HttpPost(Name = "CreateCharacter")]
         public async Task<Character> Post(String name, String playerID, String playerName, String background, String alignement, String race, String classAndLevel)
         {
             Character test = new Character(name, playerID, playerName,background,  alignement, race, classAndLevel);
             return test;
-        }
+        }*/
     }
 }

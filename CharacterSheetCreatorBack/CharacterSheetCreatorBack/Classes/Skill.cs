@@ -1,5 +1,4 @@
-﻿using CharacterSheetCreatorBack.Classes.Ability
-
+﻿
 namespace CharacterSheetCreatorBack.Classes
 {
     public class Skill
@@ -19,7 +18,7 @@ namespace CharacterSheetCreatorBack.Classes
 
         public Skill(string name, Ability ability, int modifier, bool proefficiency)
         {
-            Name = name;*
+            Name = name; 
             Ability = ability;
             Modifier = modifier;
             Proefficiency = proefficiency;

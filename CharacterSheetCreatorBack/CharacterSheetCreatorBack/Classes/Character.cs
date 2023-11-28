@@ -1,8 +1,15 @@
-﻿namespace CharacterSheetCreatorBack.Classes
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CharacterSheetCreatorBack.Classes
 {
     public class Character
     {
-        public int ID { get; set; }
+        [Key]
+        public Guid ID { get; set; }
+        [Key]
+        public int IdGame { get; set; }
+        [Key]
+        public int IdPlayer { get; set; }
         public string Name { get; set; }
 
         public Class Classe { get; set; }
@@ -36,7 +43,7 @@
 
         public Character()
         {
-            ID = 0;
+            ID = new Guid();
             Name = string.Empty;
             Classe = new Class();
             Level = 0;

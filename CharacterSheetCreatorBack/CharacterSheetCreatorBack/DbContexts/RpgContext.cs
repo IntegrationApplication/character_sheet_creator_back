@@ -14,6 +14,8 @@ namespace CharacterSheetCreatorBack.DbContexts
 
         public DbSet<Class> Classes { get; set; }
 
+        public DbSet<Character> Characters { get; set; }
+
 
         public RpgContext(DbContextOptions<RpgContext> options) : base(options) { }
 
@@ -26,6 +28,13 @@ namespace CharacterSheetCreatorBack.DbContexts
             modelBuilder.Entity<Skill>().ToTable("Skills");
 
             modelBuilder.Entity<Class>().ToTable("Classes");
+
+            modelBuilder.Entity<Character>(entity =>
+            {
+                entity.ToTable("Characters");
+                entity.HasMany<Ability>(c => c.Abilities);
+                entity.HasOne<Class>(c => c.Classe);
+            });
 
         }
 

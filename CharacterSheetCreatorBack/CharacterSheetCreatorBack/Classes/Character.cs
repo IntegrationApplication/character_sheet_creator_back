@@ -3,6 +3,9 @@
     public class Character
     {
         public int ID { get; set; }
+
+        public int IdPlayer { get; set; }
+
         public string Name { get; set; }
 
         public Classe Classe { get; set; }
@@ -14,7 +17,7 @@
         public int Level { get; set; }
 
         public int Ac {  get; set; }
-        
+
         public int SpellSaveDC { get; set; }
 
         public int SpeelCastAbility { get; set; }
@@ -23,7 +26,7 @@
 
         public int HP { get; set; }
 
-        public int HPMax { get; set; }  
+        public int HPMax { get; set; }
 
         public int HitDice { get; set; }
 

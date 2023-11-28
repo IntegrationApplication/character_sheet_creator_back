@@ -16,11 +16,11 @@ namespace CharacterSheetCreatorBack.DAL
         /* get                                                                */
         /**********************************************************************/
 
-        public Character GetCharacter(int id)
+        public Character GetCharacter(int idPlayer, int idCharacter)
         {
             try
             {
-                return _rpgContext.Characters.FirstOrDefault<Character>(x => x.ID == id);
+                return _rpgContext.Characters.First<Character>(x => x.ID == idCharacter && x.IdPlayer == idPlayer);
             }
             catch (Exception e)
             {
@@ -41,7 +41,7 @@ namespace CharacterSheetCreatorBack.DAL
 
                 // on ne peut pas appeler Update sur le player pris en paramètre
                 // (la méthode Update regarde la référence de l'objet).
-                Character dbCharacter = GetCharacter(character.ID);
+                Character dbCharacter = GetCharacter(character.IdPlayer, character.ID);
                 dbCharacter.ID = character.ID;
                 // TODO: ...
                 _rpgContext.Characters.Update(dbCharacter);
@@ -62,13 +62,13 @@ namespace CharacterSheetCreatorBack.DAL
         /* delete                                                             */
         /**********************************************************************/
 
-        public void DeleteCharacter(Character player)
+        public void DeleteCharacter(Character character)
         {
             try
             {
                 using var transaction = _rpgContext.Database.BeginTransaction();
 
-                Character toRemove = GetCharacter(player.ID);
+                Character toRemove = GetCharacter(character.IdPlayer, character.ID);
                 // TODO: supprimer les champs compexes
 
                 // suppression

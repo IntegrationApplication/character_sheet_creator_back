@@ -20,7 +20,7 @@ namespace CharacterSheetCreatorBack.DAL
         {
             try
             {
-                return _rpgContext.Players.FirstOrDefault<Player>(x => x.ID == id);
+                return _rpgContext.Players.First<Player>(x => x.ID == id);
             }
             catch (Exception e)
             {
@@ -71,8 +71,8 @@ namespace CharacterSheetCreatorBack.DAL
 
                 _rpgContext.Players.Add(player);
                 Player? dbPlayer = _rpgContext.Players.Find(player);
-                if (dbPlayer == null) {
-                throw new InvalidOperationException("The player doesn't exist.");
+                if (dbPlayer is null) {
+                    throw new InvalidOperationException("The player is null.");
                 }
 
                 // on valide les changements dans la db

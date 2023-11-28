@@ -1,16 +1,12 @@
 ﻿using CharacterSheetCreatorBack.Classes;
 using CharacterSheetCreatorBack.DAL;
 using CharacterSheetCreatorBack.DbContexts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
 
 namespace CharacterSheetCreatorBack.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-
-
     public class CharacterController : ControllerBase
     {
         private readonly RpgContext _rpgContext;
@@ -24,52 +20,45 @@ namespace CharacterSheetCreatorBack.Controllers
             _characterRepo = new CharacterRepository(_rpgContext);
         }
 
-        public Task<Character> CharacterGet(int idPlayer, int idCharacter)
+        /**********************************************************************/
+        /* get                                                                */
+        /**********************************************************************/
+
+        [HttpGet("GetCharacter")]
+        public Task<Character> GetCharacter(int idPlayer, int idCharacter)
         {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+            return Task.FromResult(character);
         }
 
-        /* [HttpGet(Name = "GetSpell")] */
-        /* public async Task<List<Spell>> Get() */
-        /* { */
-        /*     var query = from b in _rpgContext.Spells */
-        /*                 select b; */
+        /**********************************************************************/
+        /* post                                                               */
+        /**********************************************************************/
 
-        /*     List<Spell> Spells = new List<Spell>(); */
+        [HttpPost("CreateCharacter")]
+        public Task<int> CreateCharacter(Character character) {
+            int id = _characterRepo.CreateCharacter(character);
+            return Task.FromResult(id);
+        }
 
-        /*     foreach (var item in query) */
-        /*     { */
-        /*         Spells.Add(item); */
-        /*     } */
-        /*     return Spells; */
-        /* } */
+        /**********************************************************************/
+        /* put                                                                */
+        /**********************************************************************/
 
+        [HttpPost("UpdateCharacter")]
+        public Task<int> UpdateCharacter(Character character) {
+            int id = _characterRepo.UpdateCharacter(character);
+            return Task.FromResult(id);
+        }
 
-        /*
-        public async Task<Game> Get()
-        {
+        /**********************************************************************/
+        /* delete                                                             */
+        /**********************************************************************/
 
-            Game test = new Game();
-            Character MJChar = new Character { Name = "Billy" };
-            Player MJ = new Player { ID  = 1, IDDiscord = 18 , Characters = new List<Character>() };
-            MJ.Characters.Add(MJChar);
-
-
-            test.MJ = MJ;
-
-
-            return test;
-        }*/
-
-
-        [HttpPost(Name = "CreateSpell")]
-        public async Task<Spell> Post(String description)
-        {
-            Spell test = new Spell { Description = description};
-            _rpgContext.Spells.Add(test);
-            _rpgContext.SaveChanges();
-
-            return test;
+        [HttpPost("DeleteCharacter")]
+        public IActionResult DeleteCharacter(Character character) {
+            _characterRepo.DeleteCharacter(character);
+            return StatusCode(200);
         }
     }
 }

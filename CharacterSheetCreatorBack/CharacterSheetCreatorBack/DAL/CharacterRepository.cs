@@ -20,7 +20,8 @@ namespace CharacterSheetCreatorBack.DAL
         {
             try
             {
-                return _rpgContext.Characters.First<Character>(x => x.ID == idCharacter && x.IdPlayer == idPlayer);
+                return _rpgContext.Characters.First<Character>(x =>
+                        x.ID == idCharacter && x.IdPlayer == idPlayer);
             }
             catch (Exception e)
             {

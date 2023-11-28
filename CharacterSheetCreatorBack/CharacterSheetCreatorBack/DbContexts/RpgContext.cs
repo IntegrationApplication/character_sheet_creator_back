@@ -6,9 +6,9 @@ namespace CharacterSheetCreatorBack.DbContexts
 {
     public class RpgContext : DbContext
     {
-        public DbSet<Character> Characters { get; set; }
-        public DbSet<Player> Players { get; set; }
-        public DbSet<Spell> Spells { get; set; }
+        public DbSet<Character> Characters { get; set; } = null!;
+        public DbSet<Player> Players { get; set; } = null!;
+        public DbSet<Spell> Spells { get; set; } = null!;
 
         public RpgContext(DbContextOptions<RpgContext> options) : base(options) { }
 

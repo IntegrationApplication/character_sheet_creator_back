@@ -91,13 +91,13 @@ namespace CharacterSheetCreatorBack.DAL
         /* delete                                                             */
         /**********************************************************************/
 
-        public void DeleteCharacter(Character character)
+        public void DeleteCharacter(int idPlayer, int idCharacter)
         {
             try
             {
                 using var transaction = _rpgContext.Database.BeginTransaction();
 
-                Character toRemove = GetCharacter(character.IdPlayer, character.ID);
+                Character toRemove = GetCharacter(idPlayer, idCharacter);
                 // TODO: supprimer les champs compexes
 
                 // suppression

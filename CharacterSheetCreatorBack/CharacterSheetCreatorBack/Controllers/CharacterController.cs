@@ -56,8 +56,8 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpPost("DeleteCharacter")]
-        public IActionResult DeleteCharacter(Character character) {
-            _characterRepo.DeleteCharacter(character);
+        public IActionResult DeleteCharacter(int idPlayer, int idCharacter) {
+            _characterRepo.DeleteCharacter(idPlayer, idCharacter);
             return StatusCode(200);
         }
     }

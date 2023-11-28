@@ -1,4 +1,5 @@
 ﻿using CharacterSheetCreatorBack.Classes;
+using CharacterSheetCreatorBack.DbContexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
@@ -7,21 +8,37 @@ namespace CharacterSheetCreatorBack.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+
+    
     public class CharacterController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+        private readonly RpgContext _rpgContext;
 
         private readonly ILogger<CharacterController> _logger;
 
-        public CharacterController(ILogger<CharacterController> logger)
+        public CharacterController(ILogger<CharacterController> logger, RpgContext rpgContext)
         {
             _logger = logger;
+            _rpgContext = rpgContext;
         }
 
-        [HttpGet(Name = "GetCharacter")]
+        [HttpGet(Name = "GetSpell")]
+        public async Task<List<Spell>> Get()
+        {
+            var query = from b in _rpgContext.Spells
+                        select b;
+
+            List<Spell> Spells = new List<Spell>();
+
+            foreach (var item in query)
+            {
+                Spells.Add(item);
+            }
+            return Spells;
+        }
+
+
+        /*
         public async Task<Game> Get()
         {
 
@@ -35,14 +52,17 @@ namespace CharacterSheetCreatorBack.Controllers
 
 
             return test;
-        }
-
-        /*
-        [HttpPost(Name = "CreateCharacter")]
-        public async Task<Character> Post(String name, String playerID, String playerName, String background, String alignement, String race, String classAndLevel)
-        {
-            Character test = new Character(name, playerID, playerName,background,  alignement, race, classAndLevel);
-            return test;
         }*/
+
+
+        [HttpPost(Name = "CreateSpell")]
+        public async Task<Spell> Post(String description)
+        {
+            Spell test = new Spell { Description = description};
+            _rpgContext.Spells.Add(test);
+            _rpgContext.SaveChanges();
+
+            return test;
+        }
     }
 }

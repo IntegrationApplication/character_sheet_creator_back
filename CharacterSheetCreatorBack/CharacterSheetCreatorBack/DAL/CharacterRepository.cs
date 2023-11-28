@@ -25,7 +25,7 @@ namespace CharacterSheetCreatorBack.DAL
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                throw new InvalidOperationException("The player doesn't exist.");
+                throw new InvalidOperationException("The character doesn't exist.");
             }
         }
 
@@ -39,7 +39,7 @@ namespace CharacterSheetCreatorBack.DAL
             {
                 using var transaction = _rpgContext.Database.BeginTransaction();
 
-                // on ne peut pas appeler Update sur le player pris en paramètre
+                // on ne peut pas appeler Update sur le character pris en paramètre
                 // (la méthode Update regarde la référence de l'objet).
                 Character dbCharacter = GetCharacter(character.IdPlayer, character.ID);
                 dbCharacter.ID = character.ID;
@@ -71,7 +71,7 @@ namespace CharacterSheetCreatorBack.DAL
                 _rpgContext.Characters.Add(character);
                 Character? dbCharacter = _rpgContext.Characters.Find(character);
                 if (dbCharacter == null) {
-                    throw new InvalidOperationException("The player doesn't exist.");
+                    throw new InvalidOperationException("The character doesn't exist.");
                 }
 
                 // on valide les changements dans la db
@@ -82,7 +82,7 @@ namespace CharacterSheetCreatorBack.DAL
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                throw new InvalidOperationException("The player doesn't exist.");
+                throw new InvalidOperationException("The character doesn't exist.");
             }
         }
 

@@ -33,7 +33,7 @@ namespace CharacterSheetCreatorBack.DAL
         /* update                                                             */
         /**********************************************************************/
 
-        public int CreateOrUpdatePlayer(Player player)
+        public int UpdatePlayer(Player player)
         {
             try
             {
@@ -57,6 +57,34 @@ namespace CharacterSheetCreatorBack.DAL
                 throw new InvalidOperationException("The player doesn't exist.");
             }
             return player.ID;
+        }
+
+        /**********************************************************************/
+        /* create                                                             */
+        /**********************************************************************/
+
+        public int CreatePlayer(Player player)
+        {
+            try
+            {
+                using var transaction = _rpgContext.Database.BeginTransaction();
+
+                _rpgContext.Players.Add(player);
+                Player? dbPlayer = _rpgContext.Players.Find(player);
+                if (dbPlayer == null) {
+                throw new InvalidOperationException("The player doesn't exist.");
+                }
+
+                // on valide les changements dans la db
+                _rpgContext.SaveChanges();
+                transaction.Commit();
+                return dbPlayer.ID;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new InvalidOperationException("The player doesn't exist.");
+            }
         }
 
         /**********************************************************************/

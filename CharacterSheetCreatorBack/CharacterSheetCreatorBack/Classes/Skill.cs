@@ -1,8 +1,10 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations;
+
 namespace CharacterSheetCreatorBack.Classes
 {
     public class Skill
     {
+        [Key]
         public string Name { get; set; }
         public Ability Ability { get; set; }
         public int Modifier { get; set; }

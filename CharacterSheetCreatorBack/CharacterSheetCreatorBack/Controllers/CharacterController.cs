@@ -23,46 +23,42 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
         [HttpGet(Name = "GetSpell")]
-        public async Task<List<Spell>> Get()
+        public ActionResult Get()
         {
-            var query = from b in _rpgContext.Spells
-                        select b;
 
-            List<Spell> Spells = new List<Spell>();
-
-            foreach (var item in query)
+            try
             {
-                Spells.Add(item);
+                var query = from b in _rpgContext.Spells
+                            select b;
+                List<Spell> Spells = new List<Spell>();
+
+                foreach (var item in query)
+                {
+                    Spells.Add(item);
+                }
+                return Ok(Spells);
+
             }
-            return Spells;
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+
+            
+
+            
         }
 
 
-        /*
-        public async Task<Game> Get()
-        {
-
-            Game test = new Game();
-            Character MJChar = new Character { Name = "Billy" };
-            Player MJ = new Player { ID  = 1, IDDiscord = 18 , Characters = new List<Character>() };
-            MJ.Characters.Add(MJChar);
-            
-
-            test.MJ = MJ;
-
-
-            return test;
-        }*/
-
-
         [HttpPost(Name = "CreateSpell")]
-        public async Task<Spell> Post(String description)
+        public ActionResult Post(String description)
         {
             Spell test = new Spell { Description = description};
             _rpgContext.Spells.Add(test);
             _rpgContext.SaveChanges();
 
-            return test;
+            return Ok(test);
         }
     }
 }

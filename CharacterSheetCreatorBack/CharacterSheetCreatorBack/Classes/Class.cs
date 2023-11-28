@@ -1,11 +1,15 @@
-﻿namespace CharacterSheetCreatorBack.Classes
+﻿using System.ComponentModel.DataAnnotations;
+
+
+namespace CharacterSheetCreatorBack.Classes
 {
-    public class Classe
+    public class Class
     {
+        [Key]
         public string Name { get; set; }
         public int HitDice { get; set; }
 
-        public Classe() {
+        public Class() {
             Name = "";
             HitDice = 0;
         }

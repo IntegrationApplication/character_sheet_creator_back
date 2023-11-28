@@ -2,7 +2,10 @@
 {
     public class Player
     {
+        [key]
         public int ID { get; set; }
+       
+        [key]
         public int IDDiscord { get; set; }
         public List<Character> Characters { get; set; }
 

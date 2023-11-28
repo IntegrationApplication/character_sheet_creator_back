@@ -2,17 +2,21 @@
 using CharacterSheetCreatorBack.Classes;
 
 
-namespace CharacterSheetCreatorBack.DbContexts 
+namespace CharacterSheetCreatorBack.DbContexts
 {
     public class RpgContext : DbContext
     {
+        public DbSet<Character> Characters { get; set; }
+        public DbSet<Player> Players { get; set; }
         public DbSet<Spell> Spells { get; set; }
 
         public RpgContext(DbContextOptions<RpgContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Spell>().ToTable("Spells"); 
+            modelBuilder.Entity<Character>().ToTable("Characters");
+            modelBuilder.Entity<Player>().ToTable("Players");
+            modelBuilder.Entity<Spell>().ToTable("Spells");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

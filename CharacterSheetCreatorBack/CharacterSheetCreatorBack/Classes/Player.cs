@@ -1,7 +1,10 @@
-﻿namespace CharacterSheetCreatorBack.Classes
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CharacterSheetCreatorBack.Classes
 {
     public class Player
     {
+        [Key]
         public int ID { get; set; }
         public int IDDiscord { get; set; }
         public List<Character> Characters { get; set; }

@@ -1,4 +1,5 @@
 ﻿using CharacterSheetCreatorBack.Classes;
+using CharacterSheetCreatorBack.DAL;
 using CharacterSheetCreatorBack.DbContexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,33 +10,39 @@ namespace CharacterSheetCreatorBack.Controllers
     [ApiController]
     [Route("[controller]")]
 
-    
+
     public class CharacterController : ControllerBase
     {
         private readonly RpgContext _rpgContext;
-
+        private readonly CharacterRepository _characterRepo;
         private readonly ILogger<CharacterController> _logger;
 
         public CharacterController(ILogger<CharacterController> logger, RpgContext rpgContext)
         {
             _logger = logger;
             _rpgContext = rpgContext;
+            _characterRepo = new CharacterRepository(_rpgContext);
         }
 
-        [HttpGet(Name = "GetSpell")]
-        public async Task<List<Spell>> Get()
+        public Task<Character> CharacterGet(int idPlayer, int idCharacter)
         {
-            var query = from b in _rpgContext.Spells
-                        select b;
-
-            List<Spell> Spells = new List<Spell>();
-
-            foreach (var item in query)
-            {
-                Spells.Add(item);
-            }
-            return Spells;
+            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
         }
+
+        /* [HttpGet(Name = "GetSpell")] */
+        /* public async Task<List<Spell>> Get() */
+        /* { */
+        /*     var query = from b in _rpgContext.Spells */
+        /*                 select b; */
+
+        /*     List<Spell> Spells = new List<Spell>(); */
+
+        /*     foreach (var item in query) */
+        /*     { */
+        /*         Spells.Add(item); */
+        /*     } */
+        /*     return Spells; */
+        /* } */
 
 
         /*
@@ -46,7 +53,7 @@ namespace CharacterSheetCreatorBack.Controllers
             Character MJChar = new Character { Name = "Billy" };
             Player MJ = new Player { ID  = 1, IDDiscord = 18 , Characters = new List<Character>() };
             MJ.Characters.Add(MJChar);
-            
+
 
             test.MJ = MJ;
 

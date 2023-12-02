@@ -5,10 +5,8 @@ namespace CharacterSheetCreatorBack.Classes
     public class Character
     {
         [Key]
-        public Guid ID { get; set; }
-        [Key]
+        public int ID { get; set; }
         public int IdGame { get; set; }
-        [Key]
         public int IdPlayer { get; set; }
         public string Name { get; set; }
 
@@ -43,7 +41,6 @@ namespace CharacterSheetCreatorBack.Classes
 
         public Character()
         {
-            ID = new Guid();
             Name = string.Empty;
             Classe = new Class();
             Level = 0;

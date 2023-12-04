@@ -22,8 +22,8 @@ namespace CharacterSheetCreatorBack.Controllers
             _rpgContext = rpgContext;
         }
 
-        [HttpGet(Name = "GetSpell")]
-        public ActionResult Get()
+        [HttpGet(Name = "GetCharacter")]
+        public ActionResult Get(int ChannelID, int PlayerID)
         {
 
             try
@@ -51,14 +51,24 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
 
-        [HttpPost(Name = "CreateSpell")]
-        public ActionResult Post(String description)
+        [HttpPost(Name = "CreateCharacter")]
+        public ActionResult Post(int ChannelID, int PlayerID)
         {
-            Spell test = new Spell { Description = description};
-            _rpgContext.Spells.Add(test);
+            Character newCharacter = new Character
+            {
+                IdPlayer = PlayerID,
+                IdGame = ChannelID
+            };
+
+            _rpgContext.Characters.Add(newCharacter);
             _rpgContext.SaveChanges();
 
-            return Ok(test);
+            var query = from b in _rpgContext.Characters
+                        select b;
+
+
+            return Ok(newCharacter);
         }
     }
 }
+   

@@ -36,28 +36,35 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpGet("RollAbility")]
-        public Task<Character> RollAbility(int idPlayer, int idCharacter, string abilityName)
+        public Task<int> RollAbility(int idPlayer, int idCharacter, string abilityName)
         {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
-            return Task.FromResult(character.RollAbility());
+            return Task.FromResult(character.RollAbility(abilityName));
         }
 
         [HttpGet("RollSkill")]
-        public Task<Character> RollAbility(int idPlayer, int idCharacter, string abilityName)
+        public Task<int> RollSkill(int idPlayer, int idCharacter, string skillName)
         {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
-            return Task.FromResult(character.RollAbility());
+            return Task.FromResult(character.RollAbility(skillName));
         }
 
         [HttpGet("RollInitiative")]
-        public Task<Character> RollInitiative(int idPlayer, int idCharacter)
+        public Task<int> RollInitiative(int idPlayer, int idCharacter)
         {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
             return Task.FromResult(character.RollInitiative());
         }
 
+        [HttpGet("RollAny")]
+        public Task<int> RollAny(int idPlayer, int idCharacter, string name)
+        {
+            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+            return Task.FromResult(character.RollAny(name));
+        }
+
         [HttpGet("RollAttack")]
-        public Task<Character> RollAttack(int idPlayer, int idCharacter, int index)
+        public Task<int> RollAttack(int idPlayer, int idCharacter, int index)
         {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
             return Task.FromResult(character.RollAttack(index));

@@ -24,7 +24,7 @@ namespace CharacterSheetCreatorBack.Classes
             Proefficiency = proefficiency;
         }
 
-        public Roll()
+        public int Roll()
         {
             var rand = new System.Random();
             return rand.Next() % 20 + 1 + Modifier;

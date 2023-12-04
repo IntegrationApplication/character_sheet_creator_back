@@ -19,9 +19,9 @@
 
             for (int i = 0; i < DamageDice[0]; ++i)
             {
-                sum += rand.Next() % DamageDice[1] + 1;
+                total += rand.Next() % DamageDice[1] + 1;
             }
-            return sum + DamageDice[2];
+            return total + DamageDice[2];
         }
     }
 }

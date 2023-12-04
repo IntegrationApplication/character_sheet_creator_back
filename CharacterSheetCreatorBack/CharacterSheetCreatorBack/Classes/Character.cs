@@ -39,6 +39,8 @@ namespace CharacterSheetCreatorBack.Classes
 
         public int ProefficiencyBonus { get; set; }
 
+        public int PassivePerception { get; set; }
+
 
         public Character()
         {
@@ -58,6 +60,36 @@ namespace CharacterSheetCreatorBack.Classes
             Attacks = new List<Attack>();
             Spells = new List<Spell>();
             ProefficiencyBonus = 0;
+        }
+
+        /**********************************************************************/
+        /* roll                                                               */
+        /**********************************************************************/
+
+        public int RollAbility(string abilityName)
+        {
+            Ability ability = Abilities.Find(x => x.Name == abilityName);
+            ability.Roll();
+        }
+
+        public int RollSkill(string skillName)
+        {
+            Skill skill = Skills.Find(x => x.Name == skillName);
+            skill.Roll();
+        }
+
+        public int RollInitiative() {
+            var rand = new System.Rand();
+            return rand.Next() % 20 + 1 + Initiative;
+        }
+
+        public int RollAttack(int index) {
+            if (index >= Attacks.Length)
+            {
+                return 0;
+            }
+            Attack attack = Attacks[index]
+            return attack.Roll();
         }
     }
 }

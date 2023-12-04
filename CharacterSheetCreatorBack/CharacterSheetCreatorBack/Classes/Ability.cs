@@ -7,7 +7,6 @@ namespace CharacterSheetCreatorBack.Classes
         public String Name { get; set; }
         public int Value { get; set; }
         public int Modifier { get; set; }
-        public Skill LinkedSkill { get; set; }
 
         public Ability()
         {
@@ -17,12 +16,18 @@ namespace CharacterSheetCreatorBack.Classes
             LinkedSkill = new Skill();
         }
 
-        public Ability(String name, int value, int modifier, Skill skill) 
-        {  
-            Name = name; 
-            Value = value; 
+        public Ability(String name, int value, int modifier, Skill skill)
+        {
+            Name = name;
+            Value = value;
             Modifier = modifier;
             LinkedSkill = skill;
+        }
+
+        public Roll()
+        {
+            var rand = new System.Random();
+            return rand.Next() % 20 + 1 + Modifier;
         }
     }
 }

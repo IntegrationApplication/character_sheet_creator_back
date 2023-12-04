@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CharacterSheetCreatorBack.Classes;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 
 namespace CharacterSheetCreatorBack.DbContexts 
@@ -14,6 +15,10 @@ namespace CharacterSheetCreatorBack.DbContexts
 
         public DbSet<Class> Classes { get; set; }
 
+        public DbSet<Attack> Attacks { get; set; }
+
+        public DbSet<Character> Characters { get; set; }
+
 
         public RpgContext(DbContextOptions<RpgContext> options) : base(options) { }
 
@@ -26,6 +31,23 @@ namespace CharacterSheetCreatorBack.DbContexts
             modelBuilder.Entity<Skill>().ToTable("Skills");
 
             modelBuilder.Entity<Class>().ToTable("Classes");
+
+            modelBuilder.Entity<Attack>().ToTable("Attacks").Property(a => a.DamageDice)
+            .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.None).Select(int.Parse).ToArray()
+            ).Metadata.SetValueComparer(new ValueComparer<int[]>(
+            (c1, c2) => c1.SequenceEqual(c2),
+            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+            c => c.ToArray()
+        ));
+
+            modelBuilder.Entity<Character>(entity =>
+            {
+                entity.ToTable("Characters");
+                entity.HasMany<Ability>(c => c.Abilities);
+                entity.HasOne<Class>(c => c.Classe);
+            });
 
         }
 

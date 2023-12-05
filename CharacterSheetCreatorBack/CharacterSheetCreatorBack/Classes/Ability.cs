@@ -16,11 +16,17 @@ namespace CharacterSheetCreatorBack.Classes
             Modifier = 0;
         }
 
-        public Ability(String name, int value, int modifier) 
-        {  
-            Name = name; 
-            Value = value; 
+        public Ability(String name, int value, int modifier)
+        {
+            Name = name;
+            Value = value;
             Modifier = modifier;
+        }
+
+        public int Roll()
+        {
+            var rand = new System.Random();
+            return rand.Next() % 20 + 1 + Modifier;
         }
     }
 }

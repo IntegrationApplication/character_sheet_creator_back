@@ -20,10 +20,16 @@ namespace CharacterSheetCreatorBack.Classes
 
         public Skill(string name, Ability ability, int modifier, bool proefficiency)
         {
-            Name = name; 
+            Name = name;
             Ability = ability;
             Modifier = modifier;
             Proefficiency = proefficiency;
+        }
+
+        public int Roll()
+        {
+            var rand = new System.Random();
+            return rand.Next() % 20 + 1 + Modifier;
         }
     }
 }

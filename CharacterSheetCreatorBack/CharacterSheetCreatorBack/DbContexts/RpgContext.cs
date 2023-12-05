@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using CharacterSheetCreatorBack.Classes;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 
-namespace CharacterSheetCreatorBack.DbContexts 
+namespace CharacterSheetCreatorBack.DbContexts
 {
     public class RpgContext : DbContext
     {
@@ -51,11 +51,10 @@ namespace CharacterSheetCreatorBack.DbContexts
 
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Database=RPG;Trusted_Connection=True;TrustServerCertificate=true;");
-        }
-
+        /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) */
+        /* { */
+        /*     base.OnConfiguring(optionsBuilder); */
+        /*     optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Database=RPG;Trusted_Connection=True;TrustServerCertificate=true;"); */
+        /* } */
     }
 }

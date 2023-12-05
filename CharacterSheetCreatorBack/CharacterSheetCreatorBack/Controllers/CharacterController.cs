@@ -41,6 +41,7 @@ namespace CharacterSheetCreatorBack.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
 
 
 
@@ -61,7 +62,7 @@ namespace CharacterSheetCreatorBack.Controllers
         /* roll                                                               */
         /**********************************************************************/
 
-        [HttpGet("RollAbility")]
+        /*[HttpGet("RollAbility")]
         public Task<int> RollAbility(int idPlayer, int idCharacter, string abilityName)
         {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
@@ -94,7 +95,7 @@ namespace CharacterSheetCreatorBack.Controllers
         {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
             return Task.FromResult(character.RollAttack(index));
-        }
+        }*/
 
         /**********************************************************************/
         /* post                                                               */
@@ -119,13 +120,13 @@ namespace CharacterSheetCreatorBack.Controllers
         [HttpPost("TakeDamage")]
         public Task<int> TakeDamage(int idPlayer, int idCharacter, int amount) {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
-            character.HP -= amount;
-            if (character.HP < 0)
+            character.Hp -= amount;
+            if (character.Hp < 0)
             {
-                character.HP = 0;
+                character.Hp = 0;
             }
             _characterRepo.UpdateCharacter(character);
-            return Task.FromResult(character.HP);
+            return Task.FromResult(character.Hp);
         }
 
         /**********************************************************************/

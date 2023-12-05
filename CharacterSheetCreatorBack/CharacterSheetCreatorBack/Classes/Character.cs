@@ -1,8 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-<<<<<<< HEAD
-=======
-using System;
->>>>>>> update-controllers
 
 namespace CharacterSheetCreatorBack.Classes
 {
@@ -32,13 +28,13 @@ namespace CharacterSheetCreatorBack.Classes
 
         public int HitDice { get; set; }
 
-        public List<Ability> Abilities { get; set; }
+        //public List<Ability> Abilities { get; set; }
 
-        public List<Attack> Attacks { get; set; }
+        //public List<Attack> Attacks { get; set; }
 
-        public List<Spell> Spells { get; set; }
+        //public List<Spell> Spells { get; set; }
 
-        public List<Skill> Skills { get; set; }
+        //public List<Skill> Skills { get; set; }
 
         public int ProefficiencyBonus { get; set; }
 
@@ -57,10 +53,10 @@ namespace CharacterSheetCreatorBack.Classes
             Hp = 0;
             HpMax = 0;
             HitDice = 0;
-            Abilities = new List<Ability>();
-            Skills = new List<Skill>();
-            Attacks = new List<Attack>();
-            Spells = new List<Spell>();
+            //Abilities = new List<Ability>();
+            //Skills = new List<Skill>();
+            //Attacks = new List<Attack>();
+            //Spells = new List<Spell>();
             ProefficiencyBonus = 0;
         }
 
@@ -68,7 +64,7 @@ namespace CharacterSheetCreatorBack.Classes
         /* roll                                                               */
         /**********************************************************************/
 
-        public int RollAbility(string abilityName)
+        /*public int RollAbility(string abilityName)
         {
             Ability? ability = Abilities.Find(x => x.Name == abilityName);
 
@@ -81,7 +77,7 @@ namespace CharacterSheetCreatorBack.Classes
 
         public int RollSkill(string skillName)
         {
-            Skill? skill = Skills.Find(skillName);
+            Skill? skill = Skills.Find(s => s.Name == skillName);
 
             if (skill is null)
             {
@@ -108,7 +104,7 @@ namespace CharacterSheetCreatorBack.Classes
                 return ability.Roll();
             }
 
-            Skill? skill = Skills.Find(name);
+            Skill? skill = Skills.Find(s => s.Name == name);
             if (skill is not null)
             {
                 return skill.Roll();
@@ -125,6 +121,6 @@ namespace CharacterSheetCreatorBack.Classes
             }
             Attack attack = Attacks[index];
             return attack.Roll();
-        }
+        }*/
     }
 }

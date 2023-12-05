@@ -70,14 +70,15 @@ namespace CharacterSheetCreatorBack.DAL
                 using var transaction = _rpgContext.Database.BeginTransaction();
 
                 _rpgContext.Characters.Add(character);
-                Character? dbCharacter = _rpgContext.Characters.Find(character);
+                // on valide les changements dans la db
+                _rpgContext.SaveChanges();
+                transaction.Commit();
+                Character? dbCharacter = _rpgContext.Characters.First<Character>(c => c.IdPlayer == character.IdPlayer && c.IdGame == character.IdGame);
                 if (dbCharacter == null) {
                     throw new InvalidOperationException("The character doesn't exist.");
                 }
 
-                // on valide les changements dans la db
-                _rpgContext.SaveChanges();
-                transaction.Commit();
+
                 return dbCharacter.ID;
             }
             catch (Exception e)

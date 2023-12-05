@@ -45,7 +45,10 @@ namespace CharacterSheetCreatorBack.DbContexts
             modelBuilder.Entity<Character>(entity =>
             {
                 entity.ToTable("Characters");
-                entity.HasMany<Ability>(c => c.Abilities);
+                //entity.HasMany<Ability>(c => c.Abilities);
+                //entity.HasMany<Spell>(c => c.Spells);
+                //entity.HasMany<Attack>(c => c.Attacks);
+                //entity.HasMany<Skill>(c => c.Skills);
                 entity.HasOne<Class>(c => c.Classe);
             });
 

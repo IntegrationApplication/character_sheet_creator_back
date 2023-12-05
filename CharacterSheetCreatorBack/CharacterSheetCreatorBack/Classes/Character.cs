@@ -5,12 +5,12 @@ namespace CharacterSheetCreatorBack.Classes
     public class Character
     {
         [Key]
-        public int ID { get; set; }
+        public int ID { get; set; } = default(int);
         public int IdGame { get; set; }
         public int IdPlayer { get; set; }
         public string Name { get; set; }
 
-        public Class Classe { get; set; }
+        public Class? Classe { get; set; } = null;
 
         public int Level { get; set; }
 
@@ -28,13 +28,13 @@ namespace CharacterSheetCreatorBack.Classes
 
         public int HitDice { get; set; }
 
-        //public List<Ability> Abilities { get; set; }
+        public List<Ability> Abilities { get; set; }
 
-        //public List<Attack> Attacks { get; set; }
+        public List<Attack> Attacks { get; set; }
 
-        //public List<Spell> Spells { get; set; }
+        public List<Spell> Spells { get; set; }
 
-        //public List<Skill> Skills { get; set; }
+        public List<Skill> Skills { get; set; }
 
         public int ProefficiencyBonus { get; set; }
 
@@ -44,7 +44,6 @@ namespace CharacterSheetCreatorBack.Classes
         public Character()
         {
             Name = string.Empty;
-            Classe = new Class();
             Level = 0;
             Ac = 0;
             SpellSaveDC = 0;
@@ -53,10 +52,10 @@ namespace CharacterSheetCreatorBack.Classes
             Hp = 0;
             HpMax = 0;
             HitDice = 0;
-            //Abilities = new List<Ability>();
-            //Skills = new List<Skill>();
-            //Attacks = new List<Attack>();
-            //Spells = new List<Spell>();
+            Abilities = new List<Ability>();
+            Skills = new List<Skill>();
+            Attacks = new List<Attack>();
+            Spells = new List<Spell>();
             ProefficiencyBonus = 0;
         }
 
@@ -64,7 +63,7 @@ namespace CharacterSheetCreatorBack.Classes
         /* roll                                                               */
         /**********************************************************************/
 
-        /*public int RollAbility(string abilityName)
+        public int RollAbility(string abilityName)
         {
             Ability? ability = Abilities.Find(x => x.Name == abilityName);
 
@@ -121,6 +120,6 @@ namespace CharacterSheetCreatorBack.Classes
             }
             Attack attack = Attacks[index];
             return attack.Roll();
-        }*/
+        }
     }
 }

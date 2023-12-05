@@ -63,13 +63,45 @@ namespace CharacterSheetCreatorBack.DAL
         /* create                                                             */
         /**********************************************************************/
 
+        public int CreateCharacter(int IdPlayer,  int IdGame)
+        {
+            try
+            {
+                Character newCharacter = new Character
+                {
+                    IdPlayer = IdPlayer,
+                    IdGame = IdGame
+                };
+
+                _rpgContext.Characters.Add(newCharacter);
+                _rpgContext.SaveChanges();
+
+                return newCharacter.ID;
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        /*
         public int CreateCharacter(Character character)
         {
             try
             {
                 using var transaction = _rpgContext.Database.BeginTransaction();
 
+
+                Class? classe = _rpgContext.Classes.First<Class>(c => c.Name == character.Classe.Name);
+
+                if (classe != null)
+                {
+                    character.Classe = classe;
+                }
                 _rpgContext.Characters.Add(character);
+
+
                 // on valide les changements dans la db
                 _rpgContext.SaveChanges();
                 transaction.Commit();
@@ -86,7 +118,7 @@ namespace CharacterSheetCreatorBack.DAL
                 Console.WriteLine(e.ToString());
                 throw new InvalidOperationException("The character doesn't exist.");
             }
-        }
+        }*/
 
         /**********************************************************************/
         /* delete                                                             */

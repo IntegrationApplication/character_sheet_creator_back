@@ -102,8 +102,8 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpPost("CreateCharacter")]
-        public Task<int> CreateCharacter(Character character) {
-            int id = _characterRepo.CreateCharacter(character);
+        public Task<int> CreateCharacter(int idPlayer, int idGame) {
+            int id = _characterRepo.CreateCharacter(idPlayer, idGame) ;
             return Task.FromResult(id);
         }
 

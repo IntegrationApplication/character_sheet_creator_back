@@ -38,8 +38,6 @@ namespace CharacterSheetCreatorBack.DAL
         {
             try
             {
-                using var transaction = _rpgContext.Database.BeginTransaction();
-
                 // on ne peut pas appeler Update sur le character pris en paramètre
                 // (la méthode Update regarde la référence de l'objet).
                 Character dbCharacter = GetCharacter(character.IdPlayer, character.ID);
@@ -49,7 +47,6 @@ namespace CharacterSheetCreatorBack.DAL
 
                 // on valide les changements dans la db
                 _rpgContext.SaveChanges();
-                transaction.Commit();
             }
             catch (Exception e)
             {
@@ -84,42 +81,6 @@ namespace CharacterSheetCreatorBack.DAL
             }
         }
 
-
-        /*
-        public int CreateCharacter(Character character)
-        {
-            try
-            {
-                using var transaction = _rpgContext.Database.BeginTransaction();
-
-
-                Class? classe = _rpgContext.Classes.First<Class>(c => c.Name == character.Classe.Name);
-
-                if (classe != null)
-                {
-                    character.Classe = classe;
-                }
-                _rpgContext.Characters.Add(character);
-
-
-                // on valide les changements dans la db
-                _rpgContext.SaveChanges();
-                transaction.Commit();
-                Character? dbCharacter = _rpgContext.Characters.First<Character>(c => c.IdPlayer == character.IdPlayer && c.IdGame == character.IdGame);
-                if (dbCharacter == null) {
-                    throw new InvalidOperationException("The character doesn't exist.");
-                }
-
-
-                return dbCharacter.ID;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                throw new InvalidOperationException("The character doesn't exist.");
-            }
-        }*/
-
         /**********************************************************************/
         /* delete                                                             */
         /**********************************************************************/
@@ -128,15 +89,12 @@ namespace CharacterSheetCreatorBack.DAL
         {
             try
             {
-                using var transaction = _rpgContext.Database.BeginTransaction();
-
                 Character toRemove = GetCharacter(idPlayer, idCharacter);
                 // TODO: supprimer les champs compexes
 
                 // suppression
                 _rpgContext.Characters.Remove(toRemove);
                 _rpgContext.SaveChanges();
-                transaction.Commit();
             }
             catch (Exception e)
             {

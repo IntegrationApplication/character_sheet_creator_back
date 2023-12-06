@@ -7,21 +7,23 @@ namespace CharacterSheetCreatorBack.DAL
     public class CharacterRepository
     {
         private readonly RpgContext _rpgContext;
+        private AttackRepository _attackRepository;
 
         public CharacterRepository(RpgContext rpgContext) {
             this._rpgContext = rpgContext;
+            this._attackRepository = new AttackRepository(rpgContext);
         }
 
         /**********************************************************************/
         /* get                                                                */
         /**********************************************************************/
 
-        public Character GetCharacter(int idPlayer, int idCharacter)
+        public Character? GetCharacter(int idPlayer, int idGame)
         {
             try
             {
                 return _rpgContext.Characters.First<Character>(x =>
-                        x.ID == idCharacter && x.IdPlayer == idPlayer);
+                        x.IdGame == idGame && x.IdPlayer == idPlayer);
             }
             catch (Exception e)
             {
@@ -40,12 +42,32 @@ namespace CharacterSheetCreatorBack.DAL
             {
                 // on ne peut pas appeler Update sur le character pris en paramètre
                 // (la méthode Update regarde la référence de l'objet).
-                Character dbCharacter = GetCharacter(character.IdPlayer, character.ID);
-                dbCharacter.ID = character.ID;
-                // TODO: ...
-                _rpgContext.Characters.Update(dbCharacter);
+                Character dbCharacter = GetCharacter(character.IdPlayer, character.IdGame);
 
-                // on valide les changements dans la db
+                // update the db object
+                dbCharacter.Name = character.Name;
+                dbCharacter.ClassName = character.ClassName;
+                dbCharacter.Level = character.Level;
+                dbCharacter.Ac = character.Ac;
+                dbCharacter.SpellSaveDC = character.SpellSaveDC;
+                dbCharacter.SpeelCastAbility = character.SpeelCastAbility;
+                dbCharacter.Initiative = character.Initiative;
+                dbCharacter.Hp = character.Hp;
+                dbCharacter.HpMax = character.HpMax;
+                dbCharacter.HitDice = character.HitDice;
+                dbCharacter.Stats = character.Stats;
+                dbCharacter.Proefficiencies = character.Proefficiencies;
+                dbCharacter.ProefficiencyBonus = character.ProefficiencyBonus;
+                dbCharacter.PassivePerception  = character.PassivePerception;
+
+                // NOTE: pas sûr pour ça
+                dbCharacter.Attacks.Clear;
+                dbCharacter.Attacks = character.Attacks;
+                dbCharacter.Attacks.ForEach(attack =>
+                        _attackRepository.UpdateAttack(attack))
+
+                // update the db and save changes
+                _rpgContext.Characters.Update(dbCharacter);
                 _rpgContext.SaveChanges();
             }
             catch (Exception e)
@@ -90,7 +112,10 @@ namespace CharacterSheetCreatorBack.DAL
             try
             {
                 Character toRemove = GetCharacter(idPlayer, idCharacter);
-                // TODO: supprimer les champs compexes
+
+                // on supprime les attacks
+                toRemove.Attacks.ForEach(x => _attackRepository.DeleteAttack(x.Id));
+                toRemove.Attacks.Clear();
 
                 // suppression
                 _rpgContext.Characters.Remove(toRemove);

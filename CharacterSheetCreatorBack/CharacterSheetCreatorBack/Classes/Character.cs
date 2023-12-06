@@ -5,55 +5,35 @@ namespace CharacterSheetCreatorBack.Classes
     public class Character
     {
         [Key]
-        public int ID { get; set; } = default(int);
+        public int ID { get; set; }
         public int IdGame { get; set; }
         public int IdPlayer { get; set; }
         public string Name { get; set; }
-
         public string ClassName { get; set; }
-
         public int Level { get; set; }
-
         public int Ac {  get; set; }
-
         public int SpellSaveDC { get; set; }
-
         public int SpeelCastAbility { get; set; }
-
         public int Initiative { get; set; }
-
         public int Hp { get; set; }
-
         public int HpMax { get; set; }
-
         public int HitDice { get; set; }
-
         public List<int> Stats { get; set; }
-
         public List<bool> Proefficiencies { get; set; }
-
         public List<Attack> Attacks { get; set; }
-
         public int ProefficiencyBonus { get; set; }
-
         public int PassivePerception { get; set; }
 
+        /**********************************************************************/
+        /* costructor                                                         */
+        /**********************************************************************/
 
         public Character()
         {
             Name = string.Empty;
-            Level = 0;
-            Ac = 0;
-            SpellSaveDC = 0;
-            SpeelCastAbility = 0;
-            Initiative = 0;
-            Hp = 0;
-            HpMax = 0;
-            HitDice = 0;
             Stats = new List<int>(24);
             Proefficiencies = new List<bool>(24);
             Attacks = new List<Attack>();
-            ProefficiencyBonus = 0;
         }
 
         /**********************************************************************/

@@ -57,56 +57,49 @@ namespace CharacterSheetCreatorBack.Classes
         }
 
         /**********************************************************************/
+        /* accessors                                                          */
+        /**********************************************************************/
+
+        public string GetDamageType(int index)
+        {
+            if (index >= Attacks.Count)
+            {
+                throw new Exception("Error: invalid index");
+            }
+            Attack attack = Attacks[index];
+            return attack.GetDamageType;
+        }
+
+        /**********************************************************************/
         /* roll                                                               */
         /**********************************************************************/
 
-        /*public int RollAbility(string abilityName)
+        public RollInitiative()
         {
-            Ability? ability = Stats.Find(x => x.Name == abilityName);
-
-            if (ability is null)
-            {
-                throw new Exception("Error: ability not found !");
-            }
-            return ability.Roll();
-        }
-
-        public int RollSkill(string skillName)
-        {
-            Skill? skill = Skills.Find(s => s.Name == skillName);
-
-            if (skill is null)
-            {
-                throw new Exception("Error: skill not found !");
-            }
-            return skill.Roll();
-        }
-
-        public int RollInitiative() {
-            var rand = new System.Random();
+            var rand = System.Random();
             return rand.Next() % 20 + 1 + Initiative;
         }
 
-        public int RollAny(string name)
+        private ComputeStatBonus(int stat, bool isProefficient)
         {
-            if (name == "init" || name == "initiative")
-            {
-                return RollInitiative();
-            }
+            int result = Math.Ceiling((stat - 10) / 2);
 
-            Ability? ability = Stats.Find(x => x.Name == name);
-            if (ability is not null)
+            if (isProefficient)
             {
-                return ability.Roll();
+                result += ProefficiencyBonus;
             }
+            return result;
+        }
 
-            Skill? skill = Skills.Find(s => s.Name == name);
-            if (skill is not null)
-            {
-                return skill.Roll();
-            }
+        public RollAny(string abilityName)
+        {
+            var rand = System.Random();
+            int index = (int) Ability.parse(abilityName);
+            bool isProefficient = Proefficiencies[index];
+            int stat = Stats[index];
+            int bonus = ComputeStatBonus(stat, isProefficient);
 
-            throw new Exception(@"Error: {name} is not rollable.");
+            return rand.Next() % 20 + 1 + bonus;
         }
 
         public int RollAttack(int index)
@@ -115,8 +108,31 @@ namespace CharacterSheetCreatorBack.Classes
             {
                 throw new Exception("Error: invalid index");
             }
+            var rand = System.Random();
             Attack attack = Attacks[index];
-            return attack.Roll();
-        }*/
+            bool isProefficient = Proefficiencies[(int) Attacks.LinkedAbility];
+            int stat = Stats[(int) Attacks.LinkedAbility];
+            int bonus = ComputeStatBonus(stat, isProefficient);
+
+            return rand.Next() % 20 + 1 + bonus;
+        }
+
+        public int RollDamage(int index)
+        {
+            if (index >= Attacks.Count)
+            {
+                throw new Exception("Error: invalid index");
+            }
+            var rand = System.Random();
+
+            Attack attack = Attacks[index];
+            int result = attack.DamageBonus;
+            // roll all dices
+            for (int i = 0; i < attack.NbDices; ++i) {
+                result += rand.Next() % attack.DicesFaces + 1;
+            }
+
+            return result;
+        }
     }
 }

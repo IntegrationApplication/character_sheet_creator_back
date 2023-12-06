@@ -52,9 +52,9 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpGet("GetCharacter")]
-        public Task<Character> GetCharacter(int idPlayer, int idCharacter)
+        public Task<Character> GetCharacter(int idPlayer, int idGame)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
             return Task.FromResult(character);
         }
 
@@ -64,30 +64,30 @@ namespace CharacterSheetCreatorBack.Controllers
 
 
         [HttpGet("RollInitiative")]
-        public Task<int> RollInitiative(int idPlayer, int idCharacter)
+        public Task<int> RollInitiative(int idPlayer, int idGame)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
             return Task.FromResult(character.RollInitiative());
         }
 
         [HttpGet("RollAny")]
-        public Task<int> RollAny(int idPlayer, int idCharacter, string name)
+        public Task<int> RollAny(int idPlayer, int idGame, string name)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
             return Task.FromResult(character.RollAny(name));
         }
 
         [HttpGet("RollAttack")]
-        public Task<int> RollAttack(int idPlayer, int idCharacter, int index)
+        public Task<int> RollAttack(int idPlayer, int idGame, int index)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
             return Task.FromResult(character.RollAttack(index));
         }
 
         [HttpGet("RollDamage")]
-        public Task<int> RollDamage(int idPlayer, int idCharacter, int index)
+        public Task<int> RollDamage(int idPlayer, int idGame, int index)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
             return Task.FromResult(character.RollDamage(index));
         }
 
@@ -112,8 +112,8 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
         [HttpPut("TakeDamage")]
-        public Task<int> TakeDamage(int idPlayer, int idCharacter, int amount) {
-            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+        public Task<int> TakeDamage(int idPlayer, int idGame, int amount) {
+            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
             character.Hp -= amount;
             if (character.Hp < 0)
             {
@@ -138,8 +138,8 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
         [HttpDelete("DeleteCharacter")]
-        public IActionResult DeleteCharacter(int idPlayer, int idCharacter) {
-            _characterRepo.DeleteCharacter(idPlayer, idCharacter);
+        public IActionResult DeleteCharacter(int idPlayer, int idGame) {
+            _characterRepo.DeleteCharacter(idPlayer, idGame);
             return StatusCode(200);
         }
     }

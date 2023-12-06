@@ -10,7 +10,7 @@ namespace CharacterSheetCreatorBack.Classes
         public int IdPlayer { get; set; }
         public string Name { get; set; }
 
-        public Class? Classe { get; set; } = null;
+        public string ClassName { get; set; }
 
         public int Level { get; set; }
 
@@ -28,13 +28,11 @@ namespace CharacterSheetCreatorBack.Classes
 
         public int HitDice { get; set; }
 
-        public List<Ability> Abilities { get; set; }
+        public List<int> Stats { get; set; }
+
+        public List<bool> Proefficiencies { get; set; }
 
         public List<Attack> Attacks { get; set; }
-
-        public List<Spell> Spells { get; set; }
-
-        public List<Skill> Skills { get; set; }
 
         public int ProefficiencyBonus { get; set; }
 
@@ -52,10 +50,9 @@ namespace CharacterSheetCreatorBack.Classes
             Hp = 0;
             HpMax = 0;
             HitDice = 0;
-            Abilities = new List<Ability>();
-            Skills = new List<Skill>();
+            Stats = new List<int>(24);
+            Proefficiencies = new List<bool>(24);
             Attacks = new List<Attack>();
-            Spells = new List<Spell>();
             ProefficiencyBonus = 0;
         }
 
@@ -63,9 +60,9 @@ namespace CharacterSheetCreatorBack.Classes
         /* roll                                                               */
         /**********************************************************************/
 
-        public int RollAbility(string abilityName)
+        /*public int RollAbility(string abilityName)
         {
-            Ability? ability = Abilities.Find(x => x.Name == abilityName);
+            Ability? ability = Stats.Find(x => x.Name == abilityName);
 
             if (ability is null)
             {
@@ -97,7 +94,7 @@ namespace CharacterSheetCreatorBack.Classes
                 return RollInitiative();
             }
 
-            Ability? ability = Abilities.Find(x => x.Name == name);
+            Ability? ability = Stats.Find(x => x.Name == name);
             if (ability is not null)
             {
                 return ability.Roll();
@@ -120,6 +117,6 @@ namespace CharacterSheetCreatorBack.Classes
             }
             Attack attack = Attacks[index];
             return attack.Roll();
-        }
+        }*/
     }
 }

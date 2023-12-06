@@ -62,19 +62,6 @@ namespace CharacterSheetCreatorBack.Controllers
         /* roll                                                               */
         /**********************************************************************/
 
-        /*[HttpGet("RollAbility")]
-        public Task<int> RollAbility(int idPlayer, int idCharacter, string abilityName)
-        {
-            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
-            return Task.FromResult(character.RollAbility(abilityName));
-        }
-
-        [HttpGet("RollSkill")]
-        public Task<int> RollSkill(int idPlayer, int idCharacter, string skillName)
-        {
-            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
-            return Task.FromResult(character.RollAbility(skillName));
-        }
 
         [HttpGet("RollInitiative")]
         public Task<int> RollInitiative(int idPlayer, int idCharacter)
@@ -95,7 +82,14 @@ namespace CharacterSheetCreatorBack.Controllers
         {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
             return Task.FromResult(character.RollAttack(index));
-        }*/
+        }
+
+        [HttpGet("RollDamage")]
+        public Task<int> RollDamage(int idPlayer, int idCharacter, int index)
+        {
+            Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
+            return Task.FromResult(character.RollDamage(index));
+        }
 
         /**********************************************************************/
         /* post                                                               */
@@ -111,13 +105,13 @@ namespace CharacterSheetCreatorBack.Controllers
         /* put                                                                */
         /**********************************************************************/
 
-        [HttpPost("UpdateCharacter")]
+        [HttpPut("UpdateCharacter")]
         public Task<int> UpdateCharacter(Character character) {
             int id = _characterRepo.UpdateCharacter(character);
             return Task.FromResult(id);
         }
 
-        [HttpPost("TakeDamage")]
+        [HttpPut("TakeDamage")]
         public Task<int> TakeDamage(int idPlayer, int idCharacter, int amount) {
             Character character = _characterRepo.GetCharacter(idPlayer, idCharacter);
             character.Hp -= amount;
@@ -143,7 +137,7 @@ namespace CharacterSheetCreatorBack.Controllers
             return Ok(test);
         }
 
-        [HttpPost("DeleteCharacter")]
+        [HttpDelete("DeleteCharacter")]
         public IActionResult DeleteCharacter(int idPlayer, int idCharacter) {
             _characterRepo.DeleteCharacter(idPlayer, idCharacter);
             return StatusCode(200);

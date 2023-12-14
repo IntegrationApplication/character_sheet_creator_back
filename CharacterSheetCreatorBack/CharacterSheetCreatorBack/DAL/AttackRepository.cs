@@ -59,14 +59,13 @@ namespace CharacterSheetCreatorBack.DAL
                     _rpgContext.Attacks.Update(dbAttack);
                     _rpgContext.SaveChanges();
                 }
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
                 throw new InvalidOperationException("The player doesn't exist.");
             }
-            return character.ID;
+            return attack.Id;
         }
 
         /**********************************************************************/
@@ -92,9 +91,10 @@ namespace CharacterSheetCreatorBack.DAL
         {
             try
             {
+                // TODO: maybe not like this
                 _rpgContext.Attacks.Add(attack);
                 _rpgContext.SaveChanges();
-                return newAttack.Id;
+                return attack.Id;
             }
             catch(Exception e)
             {

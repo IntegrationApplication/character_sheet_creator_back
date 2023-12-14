@@ -54,17 +54,18 @@ namespace CharacterSheetCreatorBack.DAL
                 dbCharacter.Initiative = character.Initiative;
                 dbCharacter.Hp = character.Hp;
                 dbCharacter.HpMax = character.HpMax;
-                dbCharacter.HitDice = character.HitDice;
+                dbCharacter.HitDiceNumber = character.HitDiceNumber;
+                dbCharacter.HitDiceValue = character.HitDiceValue;
                 dbCharacter.Stats = character.Stats;
                 dbCharacter.Proefficiencies = character.Proefficiencies;
                 dbCharacter.ProefficiencyBonus = character.ProefficiencyBonus;
                 dbCharacter.PassivePerception  = character.PassivePerception;
 
                 // NOTE: pas sûr pour ça
-                dbCharacter.Attacks.Clear;
+                dbCharacter.Attacks.Clear();
                 dbCharacter.Attacks = character.Attacks;
                 dbCharacter.Attacks.ForEach(attack =>
-                        _attackRepository.UpdateAttack(attack))
+                        _attackRepository.UpdateAttack(attack));
 
                 // update the db and save changes
                 _rpgContext.Characters.Update(dbCharacter);

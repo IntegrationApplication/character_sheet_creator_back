@@ -10,6 +10,7 @@ namespace CharacterSheetCreatorBack.Classes
         public int IdPlayer { get; set; }
         public string Name { get; set; }
         public string ClassName { get; set; }
+        public string RaceName { get; set; }
         public int Level { get; set; }
         public int Ac {  get; set; }
         public int SpellSaveDC { get; set; }
@@ -17,7 +18,8 @@ namespace CharacterSheetCreatorBack.Classes
         public int Initiative { get; set; }
         public int Hp { get; set; }
         public int HpMax { get; set; }
-        public int HitDice { get; set; }
+        public int HitDiceNumber { get; set; }
+        public int HitDiceValue { get; set; }
         public List<int> Stats { get; set; }
         public List<bool> Proefficiencies { get; set; }
         public List<Attack> Attacks { get; set; }
@@ -47,22 +49,23 @@ namespace CharacterSheetCreatorBack.Classes
                 throw new Exception("Error: invalid index");
             }
             Attack attack = Attacks[index];
-            return attack.GetDamageType;
+            return attack.DamageType;
         }
 
         /**********************************************************************/
         /* roll                                                               */
         /**********************************************************************/
 
-        public RollInitiative()
+        public int RollInitiative()
         {
-            var rand = System.Random();
+            var rand = new System.Random();
             return rand.Next() % 20 + 1 + Initiative;
         }
 
-        private ComputeStatBonus(int stat, bool isProefficient)
+        private int ComputeStatBonus(int stat, bool isProefficient)
         {
-            int result = Math.Ceiling((stat - 10) / 2);
+            double tmp = (stat - 10) / 2.0;
+            int result = (int) Math.Ceiling(tmp);
 
             if (isProefficient)
             {
@@ -71,10 +74,12 @@ namespace CharacterSheetCreatorBack.Classes
             return result;
         }
 
-        public RollAny(string abilityName)
+        public int RollAny(string abilityName)
         {
-            var rand = System.Random();
-            int index = (int) Ability.parse(abilityName);
+            var rand = new System.Random();
+            // not working ?
+            /* BUG: int index = (int) Ability.parse(abilityName); */
+            int index = 0;
             bool isProefficient = Proefficiencies[index];
             int stat = Stats[index];
             int bonus = ComputeStatBonus(stat, isProefficient);
@@ -88,10 +93,10 @@ namespace CharacterSheetCreatorBack.Classes
             {
                 throw new Exception("Error: invalid index");
             }
-            var rand = System.Random();
+            var rand = new System.Random();
             Attack attack = Attacks[index];
-            bool isProefficient = Proefficiencies[(int) Attacks.LinkedAbility];
-            int stat = Stats[(int) Attacks.LinkedAbility];
+            bool isProefficient = Proefficiencies[(int) attack.LinkedAbility];
+            int stat = Stats[(int) attack.LinkedAbility];
             int bonus = ComputeStatBonus(stat, isProefficient);
 
             return rand.Next() % 20 + 1 + bonus;
@@ -103,7 +108,7 @@ namespace CharacterSheetCreatorBack.Classes
             {
                 throw new Exception("Error: invalid index");
             }
-            var rand = System.Random();
+            var rand = new System.Random();
 
             Attack attack = Attacks[index];
             int result = attack.DamageBonus;

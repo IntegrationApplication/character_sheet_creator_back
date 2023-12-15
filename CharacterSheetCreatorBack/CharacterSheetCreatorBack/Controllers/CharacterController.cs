@@ -20,33 +20,6 @@ namespace CharacterSheetCreatorBack.Controllers
             _characterRepo = new CharacterRepository(_rpgContext);
         }
 
-        [HttpGet(Name = "GetSpell")]
-        public ActionResult Get()
-        {
-
-            try
-            {
-                var query = from b in _rpgContext.Spells
-                            select b;
-                List<Spell> Spells = new List<Spell>();
-
-                foreach (var item in query)
-                {
-                    Spells.Add(item);
-                }
-                return Ok(Spells);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-
-
-
-
         /**********************************************************************/
         /* get                                                                */
         /**********************************************************************/
@@ -126,16 +99,6 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
         /* delete                                                             */
         /**********************************************************************/
-
-        [HttpPost(Name = "CreateSpell")]
-        public ActionResult Post(String description)
-        {
-            Spell test = new Spell { Description = description};
-            _rpgContext.Spells.Add(test);
-            _rpgContext.SaveChanges();
-
-            return Ok(test);
-        }
 
         [HttpDelete("DeleteCharacter")]
         public IActionResult DeleteCharacter(int idPlayer, int idGame) {

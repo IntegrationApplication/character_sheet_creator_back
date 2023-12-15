@@ -10,6 +10,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(policy  => {
+                          policy.WithOrigins("http://localhost*")
+                          .SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader().AllowAnyMethod();
+                      });
+});
+
 builder.Services.AddDbContext<RpgContext>(options => options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Database=RPG;Trusted_Connection=True;TrustServerCertificate=true;MultipleActiveResultSets=True;"));
 
 var app = builder.Build();
@@ -26,5 +33,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();

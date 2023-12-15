@@ -20,7 +20,8 @@ namespace CharacterSheetCreatorBack.Classes
         public int HpMax { get; set; }
         public int HitDiceNumber { get; set; }
         public int HitDiceValue { get; set; }
-        public List<int> Stats { get; set; }
+        public List<int> Stats { get; set; } // str, dex, cons, ...
+        public List<int> Skills { get; set; } // saving throws + abilities
         public List<bool> Proefficiencies { get; set; }
         public List<Attack> Attacks { get; set; }
         public int ProefficiencyBonus { get; set; }
@@ -33,7 +34,8 @@ namespace CharacterSheetCreatorBack.Classes
         public Character()
         {
             Name = string.Empty;
-            Stats = new List<int>(24);
+            Stats = new List<int>(6);
+            Skills = new List<int>(24);
             Proefficiencies = new List<bool>(24);
             Attacks = new List<Attack>();
         }

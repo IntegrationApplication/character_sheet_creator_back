@@ -27,7 +27,8 @@ namespace CharacterSheetCreatorBack.Controllers
         [HttpGet("GetCharacter")]
         public Task<Character> GetCharacter(int idPlayer, int idGame)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
+            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
+            Character character = new Character();
             return Task.FromResult(character);
         }
 
@@ -39,29 +40,36 @@ namespace CharacterSheetCreatorBack.Controllers
         [HttpGet("RollInitiative")]
         public Task<int> RollInitiative(int idPlayer, int idGame)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
-            return Task.FromResult(character.RollInitiative());
+            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
+            Console.WriteLine("roll initiative");
+            /* return Task.FromResult(character.RollInitiative()); */
+            return Task.FromResult(10);
         }
 
         [HttpGet("RollAny")]
         public Task<int> RollAny(int idPlayer, int idGame, string name)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
-            return Task.FromResult(character.RollAny(name));
+            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
+            Console.WriteLine("roll any");
+            /* return Task.FromResult(character.RollAny(name)); */
+            return Task.FromResult(20);
         }
 
         [HttpGet("RollAttack")]
         public Task<int> RollAttack(int idPlayer, int idGame, int index)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
-            return Task.FromResult(character.RollAttack(index));
+            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
+            Console.WriteLine("roll attack");
+            /* return Task.FromResult(character.RollAttack(index)); */
+            return Task.FromResult(20);
         }
 
         [HttpGet("RollDamage")]
         public Task<int> RollDamage(int idPlayer, int idGame, int index)
         {
-            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
-            return Task.FromResult(character.RollDamage(index));
+            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
+            Console.WriteLine("roll damage");
+            return Task.FromResult(5);
         }
 
         /**********************************************************************/
@@ -70,8 +78,10 @@ namespace CharacterSheetCreatorBack.Controllers
 
         [HttpPost("CreateCharacter")]
         public Task<int> CreateCharacter(int idPlayer, int idGame) {
-            int id = _characterRepo.CreateCharacter(idPlayer, idGame) ;
-            return Task.FromResult(id);
+            /* int id = _characterRepo.CreateCharacter(idPlayer, idGame) ; */
+            Console.WriteLine("create character");
+            /* return Task.FromResult(id); */
+            return Task.FromResult(1);
         }
 
         /**********************************************************************/
@@ -80,8 +90,11 @@ namespace CharacterSheetCreatorBack.Controllers
 
         [HttpPut("UpdateCharacter")]
         public Task<int> UpdateCharacter(Character character) {
-            int id = _characterRepo.UpdateCharacter(character);
-            return Task.FromResult(id);
+            /* int id = _characterRepo.UpdateCharacter(character); */
+            Console.WriteLine("update character");
+            Console.WriteLine(character);
+            /* return Task.FromResult(id); */
+            return Task.FromResult(0);
         }
 
         [HttpPut("TakeDamage")]
@@ -102,7 +115,8 @@ namespace CharacterSheetCreatorBack.Controllers
 
         [HttpDelete("DeleteCharacter")]
         public IActionResult DeleteCharacter(int idPlayer, int idGame) {
-            _characterRepo.DeleteCharacter(idPlayer, idGame);
+            /* _characterRepo.DeleteCharacter(idPlayer, idGame); */
+            Console.WriteLine("delete character");
             return StatusCode(200);
         }
     }

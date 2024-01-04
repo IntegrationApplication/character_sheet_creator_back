@@ -23,7 +23,7 @@ namespace CharacterSheetCreatorBack.Classes
         public List<int> Stats { get; set; } = new List<int>(6); // str, dex, cons, ...
         public List<int> Skills { get; set; } = new List<int>(24); // saving throws + abilities
         public List<bool> Proefficiencies { get; set; } = new List<bool>(24);
-        public List<Attack> Attacks { get; set; } = new List<Attack>(3);
+        public List<Attack> Attacks { get; set; } = new List<Attack>();
         public int ProefficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
 

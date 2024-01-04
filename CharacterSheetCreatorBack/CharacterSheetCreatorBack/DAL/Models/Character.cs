@@ -26,7 +26,7 @@ namespace CharacterSheetCreatorBack.Models
         public string Stats { get; set; } = string.Empty; // str, dex, cons, ...
         public string Skills { get; set; } = string.Empty; // saving throws + abilities
         public string Proefficiencies { get; set; } = string.Empty;
-        public List<Attack> Attacks { get; set; } = new List<Attack>(3);
+        public List<Attack> Attacks { get; set; } = new List<Attack>();
         public int ProefficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
 
@@ -64,9 +64,7 @@ namespace CharacterSheetCreatorBack.Models
             character.Skills = StringToLstInt(this.Skills);
             character.Proefficiencies = StringToLstBool(this.Proefficiencies);
             // update attacks
-            character.Attacks[0].Update(this.Attacks[0]);
-            character.Attacks[1].Update(this.Attacks[1]);
-            character.Attacks[2].Update(this.Attacks[2]);
+            this.Attacks.ForEach(attack => character.Attacks.Append(new Attack(attack)));
             character.ProefficiencyBonus = this.ProefficiencyBonus;
             character.PassivePerception = this.PassivePerception;
 
@@ -93,9 +91,7 @@ namespace CharacterSheetCreatorBack.Models
             this.Skills = LstIntToString(character.Skills);
             this.Proefficiencies = LstBoolToString(character.Proefficiencies);
             // update attacks
-            this.Attacks[0].Update(character.Attacks[0]);
-            this.Attacks[1].Update(character.Attacks[1]);
-            this.Attacks[2].Update(character.Attacks[2]);
+            character.Attacks.ForEach(attack => this.Attacks.Append(new Attack(attack)));
             this.ProefficiencyBonus = character.ProefficiencyBonus;
             this.PassivePerception = character.PassivePerception;
         }

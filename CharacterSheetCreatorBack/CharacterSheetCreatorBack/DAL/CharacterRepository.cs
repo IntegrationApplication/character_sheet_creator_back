@@ -47,10 +47,14 @@ namespace CharacterSheetCreatorBack.DAL
                 CharacterModel? dbCharacter = _rpgContext.Characters.First<CharacterModel>(x =>
                         x.IdGame == character.IdGame && x.IdPlayer == character.IdPlayer);
 
+                // suppression de toutes les attacks existantes
+                dbCharacter.Attacks.ForEach(attack => _attackRepository.DeleteAttack(attack.Id));
+                dbCharacter.Attacks.Clear();
+
                 dbCharacter.FromCharacter(character);
 
-                // update attacks first
-                dbCharacter.Attacks.ForEach(x => _attackRepository.UpdateAttack(x));
+                // on recrée les attacks
+                dbCharacter.Attacks.ForEach(attack => _attackRepository.CreateAttack(attack));
 
                 // make sure that we have the good id for the output
                 character.ID = dbCharacter.ID;

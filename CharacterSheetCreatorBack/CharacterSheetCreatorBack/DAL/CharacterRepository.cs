@@ -50,7 +50,7 @@ namespace CharacterSheetCreatorBack.DAL
                 dbCharacter.Level = character.Level;
                 dbCharacter.Ac = character.Ac;
                 dbCharacter.SpellSaveDC = character.SpellSaveDC;
-                dbCharacter.SpeelCastAbility = character.SpeelCastAbility;
+                dbCharacter.SpellCastAbility = character.SpellCastAbility;
                 dbCharacter.Initiative = character.Initiative;
                 dbCharacter.Hp = character.Hp;
                 dbCharacter.HpMax = character.HpMax;

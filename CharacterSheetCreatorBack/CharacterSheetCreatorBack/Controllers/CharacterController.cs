@@ -92,7 +92,8 @@ namespace CharacterSheetCreatorBack.Controllers
         public Task<int> UpdateCharacter(Character character) {
             /* int id = _characterRepo.UpdateCharacter(character); */
             Console.WriteLine("update character");
-            Console.WriteLine(character);
+            /*Console.WriteLine(character);*/
+            character.Print();
             /* return Task.FromResult(id); */
             return Task.FromResult(0);
         }

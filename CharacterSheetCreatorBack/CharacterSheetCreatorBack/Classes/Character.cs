@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CharacterSheetCreatorBack.Classes
 {
@@ -8,21 +10,22 @@ namespace CharacterSheetCreatorBack.Classes
         public int ID { get; set; }
         public int IdGame { get; set; }
         public int IdPlayer { get; set; }
-        public string Name { get; set; }
-        public string ClassName { get; set; }
-        public string RaceName { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string ClassName { get; set; } = string.Empty;
+        public string RaceName { get; set; } = string.Empty;
         public int Level { get; set; }
         public int Ac {  get; set; }
         public int SpellSaveDC { get; set; }
-        public int SpeelCastAbility { get; set; }
+        public int SpellCastAbility { get; set; }
         public int Initiative { get; set; }
         public int Hp { get; set; }
         public int HpMax { get; set; }
         public int HitDiceNumber { get; set; }
         public int HitDiceValue { get; set; }
-        public List<int> Stats { get; set; } // str, dex, cons, ...
-        public List<int> Skills { get; set; } // saving throws + abilities
-        public List<bool> Proefficiencies { get; set; }
+        // TODO: utiliser une string au lieu d'une liste pour stocker ça dans la db:
+        public List<int> Stats { get; set; } = new List<int>(6); // str, dex, cons, ...
+        public List<int> Skills { get; set; } = new List<int>(24); // saving throws + abilities
+        public List<bool> Proefficiencies { get; set; } = new List<bool>(24);
         public List<Attack> Attacks { get; set; }
         public int ProefficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
@@ -34,9 +37,6 @@ namespace CharacterSheetCreatorBack.Classes
         public Character()
         {
             Name = string.Empty;
-            Stats = new List<int>(6);
-            Skills = new List<int>(24);
-            Proefficiencies = new List<bool>(24);
             Attacks = new List<Attack>();
         }
 
@@ -121,5 +121,23 @@ namespace CharacterSheetCreatorBack.Classes
 
             return result;
         }
+
+        /**********************************************************************/
+        /* Print for debugging                                                */
+        /**********************************************************************/
+
+        public void Print()
+        {
+            Console.WriteLine("Name: " + Name);
+            Console.WriteLine("ClassName: " + ClassName);
+            Console.WriteLine("RaceName: " + RaceName);
+            Console.WriteLine("Level: " + Level);
+            Console.WriteLine("Ac: " + Ac);
+            Console.WriteLine("SpellSaveDc: " + SpellSaveDC);
+            Console.WriteLine("SpellCastAbility: " + SpellCastAbility);
+            Console.WriteLine("Hp: " + Hp);
+            Console.WriteLine("HpMax: " + HpMax);
+        }
+
     }
 }

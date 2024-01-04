@@ -1,5 +1,6 @@
 using CharacterSheetCreatorBack.Classes;
 using CharacterSheetCreatorBack.DbContexts;
+using CharacterSheetCreatorBack.Models;
 
 namespace CharacterSheetCreatorBack.DAL
 {
@@ -22,8 +23,9 @@ namespace CharacterSheetCreatorBack.DAL
         {
             try
             {
-                return _rpgContext.Characters.First<Character>(x =>
+                CharacterModel? model =  _rpgContext.Characters.First<CharacterModel>(x =>
                         x.IdGame == idGame && x.IdPlayer == idPlayer);
+                return model.ToCharacter();
             }
             catch (Exception e)
             {
@@ -42,30 +44,26 @@ namespace CharacterSheetCreatorBack.DAL
             {
                 // on ne peut pas appeler Update sur le character pris en paramètre
                 // (la méthode Update regarde la référence de l'objet).
-                Character dbCharacter = GetCharacter(character.IdPlayer, character.IdGame);
+                CharacterModel? dbCharacter = _rpgContext.Characters.First<CharacterModel>(x =>
+                        x.IdGame == character.IdGame && x.IdPlayer == character.IdPlayer);
 
-                // update the db object
-                dbCharacter.Name = character.Name;
-                dbCharacter.ClassName = character.ClassName;
-                dbCharacter.Level = character.Level;
-                dbCharacter.Ac = character.Ac;
-                dbCharacter.SpellSaveDC = character.SpellSaveDC;
-                dbCharacter.SpellCastAbility = character.SpellCastAbility;
-                dbCharacter.Initiative = character.Initiative;
-                dbCharacter.Hp = character.Hp;
-                dbCharacter.HpMax = character.HpMax;
-                dbCharacter.HitDiceNumber = character.HitDiceNumber;
-                dbCharacter.HitDiceValue = character.HitDiceValue;
-                dbCharacter.Stats = character.Stats;
-                dbCharacter.Proefficiencies = character.Proefficiencies;
-                dbCharacter.ProefficiencyBonus = character.ProefficiencyBonus;
-                dbCharacter.PassivePerception  = character.PassivePerception;
+                // la façon la plus simple de mettre à jour les attacks
+                dbCharacter.Attacks.ForEach(x => _attackRepository.DeleteAttack(x.Id));
+                dbCharacter.Attacks.Clear();
+
+                dbCharacter.FromCharacter(character);
+
+                // TODO: faire une vraie update des attacks
+                dbCharacter.Attacks.ForEach(x => _attackRepository.CreateAttack(x));
 
                 // NOTE: pas sûr pour ça
-                dbCharacter.Attacks.Clear();
-                dbCharacter.Attacks = character.Attacks;
-                dbCharacter.Attacks.ForEach(attack =>
-                        _attackRepository.UpdateAttack(attack));
+                /* dbCharacter.Attacks.Clear(); */
+                /* dbCharacter.Attacks = character.Attacks; */
+                /* dbCharacter.Attacks.ForEach(attack => */
+                /*         _attackRepository.UpdateAttack(attack)); */
+
+                // make sure that we have the good id for the output
+                character.ID = dbCharacter.ID;
 
                 // update the db and save changes
                 _rpgContext.Characters.Update(dbCharacter);
@@ -93,7 +91,7 @@ namespace CharacterSheetCreatorBack.DAL
                     IdGame = IdGame
                 };
 
-                _rpgContext.Characters.Add(newCharacter);
+                _rpgContext.Characters.Add(new CharacterModel(newCharacter));
                 _rpgContext.SaveChanges();
 
                 return newCharacter.ID;
@@ -108,11 +106,12 @@ namespace CharacterSheetCreatorBack.DAL
         /* delete                                                             */
         /**********************************************************************/
 
-        public void DeleteCharacter(int idPlayer, int idCharacter)
+        public void DeleteCharacter(int idPlayer, int idGame)
         {
             try
             {
-                Character toRemove = GetCharacter(idPlayer, idCharacter);
+                CharacterModel? toRemove = _rpgContext.Characters.First<CharacterModel>(x =>
+                        x.IdGame == idPlayer && x.IdPlayer == idGame);
 
                 // on supprime les attacks
                 toRemove.Attacks.ForEach(x => _attackRepository.DeleteAttack(x.Id));

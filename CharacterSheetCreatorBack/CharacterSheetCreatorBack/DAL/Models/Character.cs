@@ -35,34 +35,14 @@ namespace CharacterSheetCreatorBack.Models
         /**********************************************************************/
 
         public CharacterModel(Character character) {
-            this.ID = character.ID;
-            this.IdGame = character.IdGame;
-            this.IdPlayer = character.IdPlayer;
-            this.Name = character.Name;
-            this.ClassName = character.ClassName;
-            this.RaceName = character.RaceName;
-            this.Level = character.Level;
-            this.Ac = character.Ac;
-            this.SpellSaveDC = character.SpellSaveDC;
-            this.SpellCastAbility = character.SpellCastAbility;
-            this.Initiative = character.Initiative;
-            this.Hp = character.Hp;
-            this.HpMax = character.HpMax;
-            this.HitDiceNumber = character.HitDiceNumber;
-            this.HitDiceValue = character.HitDiceValue;
-            this.Stats = LstIntToString(character.Stats);
-            this.Skills = LstIntToString(character.Skills);
-            this.Proefficiencies = LstBoolToString(character.Proefficiencies);
-            this.Attacks = character.Attacks;
-            this.ProefficiencyBonus = character.ProefficiencyBonus;
-            this.PassivePerception = character.PassivePerception;
+            FromCharacter(character);
         }
 
         /**********************************************************************/
         /* convertion to character                                            */
         /**********************************************************************/
 
-        Character ToCharacter() {
+        public Character ToCharacter() {
             Character character = new Character();
 
             character.ID = this.ID;
@@ -88,6 +68,31 @@ namespace CharacterSheetCreatorBack.Models
             character.PassivePerception = this.PassivePerception;
 
             return character;
+        }
+
+        public void FromCharacter(Character character) {
+            /* this.ID = character.ID; */
+            this.IdGame = character.IdGame;
+            this.IdPlayer = character.IdPlayer;
+            this.Name = character.Name;
+            this.ClassName = character.ClassName;
+            this.RaceName = character.RaceName;
+            this.Level = character.Level;
+            this.Ac = character.Ac;
+            this.SpellSaveDC = character.SpellSaveDC;
+            this.SpellCastAbility = character.SpellCastAbility;
+            this.Initiative = character.Initiative;
+            this.Hp = character.Hp;
+            this.HpMax = character.HpMax;
+            this.HitDiceNumber = character.HitDiceNumber;
+            this.HitDiceValue = character.HitDiceValue;
+            this.Stats = LstIntToString(character.Stats);
+            this.Skills = LstIntToString(character.Skills);
+            this.Proefficiencies = LstBoolToString(character.Proefficiencies);
+            // note: this may not be a good idea for attacks
+            this.Attacks = character.Attacks;
+            this.ProefficiencyBonus = character.ProefficiencyBonus;
+            this.PassivePerception = character.PassivePerception;
         }
 
         /**********************************************************************/

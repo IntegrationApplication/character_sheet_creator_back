@@ -22,7 +22,6 @@ namespace CharacterSheetCreatorBack.Classes
         public int HpMax { get; set; }
         public int HitDiceNumber { get; set; }
         public int HitDiceValue { get; set; }
-        // TODO: utiliser une string au lieu d'une liste pour stocker ça dans la db:
         public List<int> Stats { get; set; } = new List<int>(6); // str, dex, cons, ...
         public List<int> Skills { get; set; } = new List<int>(24); // saving throws + abilities
         public List<bool> Proefficiencies { get; set; } = new List<bool>(24);

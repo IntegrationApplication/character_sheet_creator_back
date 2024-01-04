@@ -26,7 +26,7 @@ namespace CharacterSheetCreatorBack.Models
         public string Stats { get; set; } = string.Empty; // str, dex, cons, ...
         public string Skills { get; set; } = string.Empty; // saving throws + abilities
         public string Proefficiencies { get; set; } = string.Empty;
-        public List<Attack> Attacks { get; set; }
+        public List<Attack> Attacks { get; set; } = new List<Attack>(3);
         public int ProefficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
 
@@ -63,7 +63,10 @@ namespace CharacterSheetCreatorBack.Models
             character.Stats = StringToLstInt(this.Stats);
             character.Skills = StringToLstInt(this.Skills);
             character.Proefficiencies = StringToLstBool(this.Proefficiencies);
-            character.Attacks = this.Attacks;
+            // update attacks
+            character.Attacks[0].Update(this.Attacks[0]);
+            character.Attacks[1].Update(this.Attacks[1]);
+            character.Attacks[2].Update(this.Attacks[2]);
             character.ProefficiencyBonus = this.ProefficiencyBonus;
             character.PassivePerception = this.PassivePerception;
 
@@ -89,8 +92,10 @@ namespace CharacterSheetCreatorBack.Models
             this.Stats = LstIntToString(character.Stats);
             this.Skills = LstIntToString(character.Skills);
             this.Proefficiencies = LstBoolToString(character.Proefficiencies);
-            // note: this may not be a good idea for attacks
-            this.Attacks = character.Attacks;
+            // update attacks
+            this.Attacks[0].Update(character.Attacks[0]);
+            this.Attacks[1].Update(character.Attacks[1]);
+            this.Attacks[2].Update(character.Attacks[2]);
             this.ProefficiencyBonus = character.ProefficiencyBonus;
             this.PassivePerception = character.PassivePerception;
         }

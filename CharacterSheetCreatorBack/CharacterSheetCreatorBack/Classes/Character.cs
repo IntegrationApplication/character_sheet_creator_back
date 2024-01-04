@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CharacterSheetCreatorBack.Classes
 {
@@ -25,7 +23,7 @@ namespace CharacterSheetCreatorBack.Classes
         public List<int> Stats { get; set; } = new List<int>(6); // str, dex, cons, ...
         public List<int> Skills { get; set; } = new List<int>(24); // saving throws + abilities
         public List<bool> Proefficiencies { get; set; } = new List<bool>(24);
-        public List<Attack> Attacks { get; set; }
+        public List<Attack> Attacks { get; set; } = new List<Attack>(3);
         public int ProefficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
 
@@ -35,8 +33,6 @@ namespace CharacterSheetCreatorBack.Classes
 
         public Character()
         {
-            Name = string.Empty;
-            Attacks = new List<Attack>();
         }
 
         /**********************************************************************/

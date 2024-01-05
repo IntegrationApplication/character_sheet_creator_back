@@ -18,15 +18,7 @@ namespace CharacterSheetCreatorBack.DAL
 
         public Attack? GetAttack(int idAttack)
         {
-            try
-            {
-                return _rpgContext.Attacks.First<Attack>(x => x.Id == idAttack);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                throw new InvalidOperationException("The attack doesn't exist.");
-            }
+            return _rpgContext.Attacks.First<Attack>(x => x.Id == idAttack);
         }
 
         /**********************************************************************/
@@ -35,35 +27,23 @@ namespace CharacterSheetCreatorBack.DAL
 
         public int UpdateAttack(Attack attack)
         {
-            try
+            // on ne peut pas appeler Update sur le character pris en paramètre
+            // (la méthode Update regarde la référence de l'objet).
+            Attack? dbAttack = GetAttack(attack.Id);
+
+            if (dbAttack is null)
             {
-                // on ne peut pas appeler Update sur le character pris en paramètre
-                // (la méthode Update regarde la référence de l'objet).
-                Attack? dbAttack = GetAttack(attack.Id);
-
-                if (dbAttack is null)
-                {
-                    // ajout si existe pas (plus simple pour update le character)
-                    CreateAttack(attack);
-                }
-                else
-                {
-                    // update the db object
-                    dbAttack.LinkedAbility = attack.LinkedAbility;
-                    dbAttack.DamageType = attack.DamageType;
-                    dbAttack.NbDices = attack.NbDices;
-                    dbAttack.DicesFaces = attack.DicesFaces;
-                    dbAttack.DamageBonus = attack.DamageBonus;
-
-                    // update the db and save changes
-                    _rpgContext.Attacks.Update(dbAttack);
-                    _rpgContext.SaveChanges();
-                }
+                // ajout si existe pas (plus simple pour update le character)
+                CreateAttack(attack);
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e.ToString());
-                throw new InvalidOperationException("The player doesn't exist.");
+                // update the db object
+                dbAttack.Update(attack);
+
+                // update the db and save changes
+                _rpgContext.Attacks.Update(dbAttack);
+                _rpgContext.SaveChanges();
             }
             return attack.Id;
         }
@@ -74,32 +54,20 @@ namespace CharacterSheetCreatorBack.DAL
 
         public int CreateAttack()
         {
-            try
-            {
-                Attack newAttack = new Attack();
-                _rpgContext.Attacks.Add(newAttack);
-                _rpgContext.SaveChanges();
-                return newAttack.Id;
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
+            Attack newAttack = new Attack();
+            _rpgContext.Attacks.Add(newAttack);
+            _rpgContext.SaveChanges();
+            return newAttack.Id;
         }
 
         public int CreateAttack(Attack attack)
         {
-            try
-            {
-                // TODO: maybe not like this
-                _rpgContext.Attacks.Add(attack);
-                _rpgContext.SaveChanges();
-                return attack.Id;
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
+            Console.WriteLine("create attack");
+            Attack newAttack = new Attack();
+            newAttack.Update(attack);
+            _rpgContext.Attacks.Add(newAttack);
+            _rpgContext.SaveChanges();
+            return attack.Id;
         }
 
         /**********************************************************************/
@@ -108,17 +76,10 @@ namespace CharacterSheetCreatorBack.DAL
 
         public void DeleteAttack(int idAttack)
         {
-            try
-            {
-                Attack toRemove = GetAttack(idAttack);
-                // suppression
-                _rpgContext.Attacks.Remove(toRemove);
-                _rpgContext.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException("Impossible to delete this character: " + e.Message);
-            }
+            Attack? toRemove = GetAttack(idAttack);
+            // suppression
+            _rpgContext.Attacks.Remove(toRemove);
+            _rpgContext.SaveChanges();
         }
     }
 }

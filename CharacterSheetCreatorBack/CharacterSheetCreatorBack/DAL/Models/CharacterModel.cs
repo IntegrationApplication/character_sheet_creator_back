@@ -70,7 +70,7 @@ namespace CharacterSheetCreatorBack.Models
             character.Skills = StringToLstInt(this.Skills);
             character.Proefficiencies = StringToLstBool(this.Proefficiencies);
             // update attacks
-            this.Attacks.ForEach(attack => character.Attacks.Append(new Attack(attack)));
+            this.Attacks.ForEach(attack => character.Attacks.Add(new Attack(attack)));
             character.ProefficiencyBonus = this.ProefficiencyBonus;
             character.PassivePerception = this.PassivePerception;
 
@@ -97,7 +97,8 @@ namespace CharacterSheetCreatorBack.Models
             this.Skills = LstIntToString(character.Skills);
             this.Proefficiencies = LstBoolToString(character.Proefficiencies);
             // update attacks
-            character.Attacks.ForEach(attack => this.Attacks.Append(new Attack(attack)));
+            this.Attacks.Clear();
+            character.Attacks.ForEach(attack => this.Attacks.Add(attack));
             this.ProefficiencyBonus = character.ProefficiencyBonus;
             this.PassivePerception = character.PassivePerception;
         }
@@ -121,14 +122,16 @@ namespace CharacterSheetCreatorBack.Models
 
             foreach (string elt in str.Split(";").Where(s => s != ""))
             {
-                output.Append(int.Parse(elt));
+                output.Add(int.Parse(elt));
             }
             return output;
         }
 
         private string LstBoolToString(List<bool> list) {
             string output = "";
-            foreach (bool elt in list) {
+
+            foreach (bool elt in list)
+            {
                 output += elt.ToString() + ";";
             }
             return output;
@@ -139,7 +142,7 @@ namespace CharacterSheetCreatorBack.Models
 
             foreach (string elt in str.Split(";").Where(s => s != ""))
             {
-                output.Append(bool.Parse(elt));
+                output.Add(bool.Parse(elt));
             }
             return output;
         }

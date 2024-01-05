@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CharacterSheetCreatorBack.Migrations
 {
     [DbContext(typeof(RpgContext))]
-    [Migration("20240105101223_init")]
+    [Migration("20240105130706_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

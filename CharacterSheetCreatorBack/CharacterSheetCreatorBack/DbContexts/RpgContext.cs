@@ -15,15 +15,10 @@ namespace CharacterSheetCreatorBack.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Attack>().ToTable("Attacks");
-
-            modelBuilder.Entity<CharacterModel>(entity =>
-            {
-                entity.ToTable("Characters");
-                entity.HasMany<Attack>(c => c.Attacks);
-            });
-
+            modelBuilder.Entity<CharacterModel>()
+                .ToTable("Characters")
+                .HasMany(c => c.Attacks);
         }
     }
 }

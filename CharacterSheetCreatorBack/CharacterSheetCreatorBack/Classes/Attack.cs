@@ -5,7 +5,7 @@ namespace CharacterSheetCreatorBack.Classes
     public class Attack
     {
         [Key]
-        public int Id { get; set; } = default(int);
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public Ability LinkedAbility { get; set; }
         public string DamageType { get; set; } = string.Empty;

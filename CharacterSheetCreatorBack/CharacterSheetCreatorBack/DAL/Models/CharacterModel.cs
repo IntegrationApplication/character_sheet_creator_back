@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CharacterSheetCreatorBack.Classes;
+using CharacterSheetCreatorBack.DAL.Models;
 
 namespace CharacterSheetCreatorBack.Models
 {
@@ -26,7 +27,7 @@ namespace CharacterSheetCreatorBack.Models
         public string Stats { get; set; } = string.Empty; // str, dex, cons, ...
         public string Skills { get; set; } = string.Empty; // saving throws + abilities
         public string Proefficiencies { get; set; } = string.Empty;
-        public List<Attack> Attacks { get; set; } = new List<Attack>();
+        public List<AttackModel> Attacks { get; set; } = new List<AttackModel>();
         public int ProefficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
 
@@ -98,7 +99,7 @@ namespace CharacterSheetCreatorBack.Models
             this.Proefficiencies = LstBoolToString(character.Proefficiencies);
             // update attacks
             this.Attacks.Clear();
-            character.Attacks.ForEach(attack => this.Attacks.Add(attack));
+            // character.Attacks.ForEach(attack => this.Attacks.Add(attack));
             this.ProefficiencyBonus = character.ProefficiencyBonus;
             this.PassivePerception = character.PassivePerception;
         }

@@ -51,22 +51,22 @@ namespace CharacterSheetCreatorBack.Migrations
                     NbDices = table.Column<int>(type: "int", nullable: false),
                     DicesFaces = table.Column<int>(type: "int", nullable: false),
                     DamageBonus = table.Column<int>(type: "int", nullable: false),
-                    CharacterModelID = table.Column<int>(type: "int", nullable: true)
+                    CharacterModelId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Attacks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attacks_Characters_CharacterModelID",
-                        column: x => x.CharacterModelID,
+                        name: "FK_Attacks_Characters_CharacterModelId",
+                        column: x => x.CharacterModelId,
                         principalTable: "Characters",
                         principalColumn: "ID");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attacks_CharacterModelID",
+                name: "IX_Attacks_CharacterModelId",
                 table: "Attacks",
-                column: "CharacterModelID");
+                column: "CharacterModelId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

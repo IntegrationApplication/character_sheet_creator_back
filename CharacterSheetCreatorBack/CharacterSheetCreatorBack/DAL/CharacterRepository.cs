@@ -1,4 +1,5 @@
 using CharacterSheetCreatorBack.Classes;
+using CharacterSheetCreatorBack.DAL.Models;
 using CharacterSheetCreatorBack.DbContexts;
 using CharacterSheetCreatorBack.Models;
 
@@ -23,7 +24,11 @@ namespace CharacterSheetCreatorBack.DAL
         {
             CharacterModel? model =  _rpgContext.Characters.First<CharacterModel>(x =>
                     x.IdGame == idGame && x.IdPlayer == idPlayer);
-            return model.ToCharacter();
+            Character character = model.ToCharacter();
+            List<AttackModel> attacks = _rpgContext.Attacks.Where(a => a.CharacterModelId == model.ID).ToList();
+
+            attacks.ForEach(attack => character.Attacks.Add(new Attack(attack))); 
+            return character;
         }
 
         /**********************************************************************/
@@ -36,6 +41,7 @@ namespace CharacterSheetCreatorBack.DAL
             // (la méthode Update regarde la référence de l'objet).
             CharacterModel? dbCharacter = _rpgContext.Characters.First<CharacterModel>(x =>
                     x.IdGame == character.IdGame && x.IdPlayer == character.IdPlayer);
+            List<AttackModel> attacks = _rpgContext.Attacks.Where(a => a.CharacterModelId == dbCharacter.ID).ToList();
 
             if (dbCharacter is null)
             {
@@ -43,16 +49,14 @@ namespace CharacterSheetCreatorBack.DAL
             }
 
             // suppression de toutes les attacks existantes
-            dbCharacter.Attacks.ForEach(attack => _attackRepository.DeleteAttack(attack.Id));
-            dbCharacter.Attacks.Clear();
-
+            attacks.ForEach(attack => _attackRepository.DeleteAttack(attack.Id));
             dbCharacter.FromCharacter(character);
 
             // on recrée les attacks
-            dbCharacter.Attacks.ForEach(attack =>
+            character.Attacks.ForEach(attack =>
             {
                 attack.Print();
-                _attackRepository.CreateAttack(attack);
+                _attackRepository.CreateAttack(attack, ref dbCharacter);
             });
 
             // make sure that we have the good id for the output

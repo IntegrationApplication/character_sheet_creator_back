@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using CharacterSheetCreatorBack.Classes;
 using CharacterSheetCreatorBack.Models;
+using CharacterSheetCreatorBack.DAL.Models;
 
 
 namespace CharacterSheetCreatorBack.DbContexts
 {
     public class RpgContext : DbContext
     {
-        public DbSet<Attack> Attacks { get; set; }
+        public DbSet<AttackModel> Attacks { get; set; }
         public DbSet<CharacterModel> Characters { get; set; }
 
 
@@ -15,10 +16,13 @@ namespace CharacterSheetCreatorBack.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Attack>().ToTable("Attacks");
+            modelBuilder.Entity<AttackModel>().ToTable("Attacks");
             modelBuilder.Entity<CharacterModel>()
                 .ToTable("Characters")
-                .HasMany(c => c.Attacks);
+                .HasMany(c => c.Attacks)
+                .WithOne(a => a.CharacterModel)
+                .HasForeignKey(a => a.CharacterModelId)
+                .IsRequired(false);
         }
     }
 }

@@ -1,5 +1,8 @@
 using CharacterSheetCreatorBack.Classes;
+using CharacterSheetCreatorBack.DAL.Models;
 using CharacterSheetCreatorBack.DbContexts;
+using CharacterSheetCreatorBack.Models;
+using System.Linq;
 
 namespace CharacterSheetCreatorBack.DAL
 {
@@ -18,7 +21,10 @@ namespace CharacterSheetCreatorBack.DAL
 
         public Attack? GetAttack(int idAttack)
         {
-            return _rpgContext.Attacks.First<Attack>(x => x.Id == idAttack);
+            Attack attack = new Attack();
+            AttackModel? model = _rpgContext.Attacks.First<AttackModel>(x => x.Id == idAttack);
+            attack.FromModel(model);
+            return attack;
         }
 
         /**********************************************************************/
@@ -29,17 +35,17 @@ namespace CharacterSheetCreatorBack.DAL
         {
             // on ne peut pas appeler Update sur le character pris en paramètre
             // (la méthode Update regarde la référence de l'objet).
-            Attack? dbAttack = GetAttack(attack.Id);
+            AttackModel? dbAttack = _rpgContext.Attacks.First<AttackModel>(x => x.Id == attack.Id);
 
             if (dbAttack is null)
             {
                 // ajout si existe pas (plus simple pour update le character)
-                CreateAttack(attack);
+                throw new InvalidOperationException("Error: the attack doesn't exist.");
             }
             else
             {
                 // update the db object
-                dbAttack.Update(attack);
+                dbAttack.FromAttack(attack);
 
                 // update the db and save changes
                 _rpgContext.Attacks.Update(dbAttack);
@@ -54,18 +60,20 @@ namespace CharacterSheetCreatorBack.DAL
 
         public int CreateAttack()
         {
-            Attack newAttack = new Attack();
-            _rpgContext.Attacks.Add(newAttack);
+            AttackModel model = new AttackModel();
+            _rpgContext.Attacks.Add(model);
             _rpgContext.SaveChanges();
-            return newAttack.Id;
+            return model.Id;
         }
 
-        public int CreateAttack(Attack attack)
+        public int CreateAttack(Attack attack, ref CharacterModel parent)
         {
             Console.WriteLine("create attack");
-            Attack newAttack = new Attack();
-            newAttack.Update(attack);
-            _rpgContext.Attacks.Add(newAttack);
+            AttackModel model = new AttackModel();
+            model.FromAttack(attack);
+            model.CharacterModelId = parent.ID;
+            model.CharacterModel = parent;
+            _rpgContext.Attacks.Add(model);
             _rpgContext.SaveChanges();
             return attack.Id;
         }
@@ -76,7 +84,7 @@ namespace CharacterSheetCreatorBack.DAL
 
         public void DeleteAttack(int idAttack)
         {
-            Attack? toRemove = GetAttack(idAttack);
+            AttackModel? toRemove = _rpgContext.Attacks.First<AttackModel>(x => x.Id == idAttack);
             // suppression
             _rpgContext.Attacks.Remove(toRemove);
             _rpgContext.SaveChanges();

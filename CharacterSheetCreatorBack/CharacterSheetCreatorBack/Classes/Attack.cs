@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CharacterSheetCreatorBack.DAL.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace CharacterSheetCreatorBack.Classes
 {
     public class Attack
     {
-        [Key]
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public Ability LinkedAbility { get; set; }
@@ -20,17 +20,20 @@ namespace CharacterSheetCreatorBack.Classes
         public Attack() {
         }
 
-        public Attack(Attack other) {
-            Update(other);
+        public Attack(AttackModel model)
+        {
+            FromModel(model);
         }
 
-        public void Update(Attack other) {
-            this.Name = other.Name;
-            this.LinkedAbility = other.LinkedAbility;
-            this.DamageType = other.DamageType;
-            this.NbDices = other.NbDices;
-            this.DicesFaces = other.DicesFaces;
-            this.DamageBonus = other.DamageBonus;
+        public void FromModel(AttackModel model)
+        {
+            this.Id = model.Id;
+            this.Name = model.Name;
+            this.LinkedAbility = model.LinkedAbility;
+            this.DamageType = model.DamageType;
+            this.NbDices = model.NbDices;
+            this.DicesFaces = model.DicesFaces;
+            this.DamageBonus = model.DamageBonus;
         }
 
         /**********************************************************************/

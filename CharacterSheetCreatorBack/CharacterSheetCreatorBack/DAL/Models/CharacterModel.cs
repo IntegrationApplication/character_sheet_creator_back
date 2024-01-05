@@ -34,7 +34,13 @@ namespace CharacterSheetCreatorBack.Models
         /* costructor                                                         */
         /**********************************************************************/
 
-        public CharacterModel(Character character) {
+        public CharacterModel()
+        {
+            // default constructor for EF
+        }
+
+        public CharacterModel(Character character)
+        {
             FromCharacter(character);
         }
 

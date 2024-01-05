@@ -4,7 +4,7 @@ namespace CharacterSheetCreatorBack.Classes
 {
     public enum Ability
     {
-        Strenght,
+        Strength,
         Dexterity,
         Constitution,
         Intelligence,

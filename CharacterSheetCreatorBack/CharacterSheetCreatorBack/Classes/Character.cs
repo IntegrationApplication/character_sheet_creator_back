@@ -74,9 +74,7 @@ namespace CharacterSheetCreatorBack.Classes
         public int RollAny(string abilityName)
         {
             var rand = new System.Random();
-            // not working ?
-            /* BUG: int index = (int) Ability.parse(abilityName); */
-            int index = 0;
+            int index = (int) AbilityFromString(abilityName);
             bool isProefficient = Proefficiencies[index];
             int stat = Stats[index];
             int bonus = ComputeStatBonus(stat, isProefficient);
@@ -132,7 +130,19 @@ namespace CharacterSheetCreatorBack.Classes
             Console.WriteLine("SpellCastAbility: " + SpellCastAbility);
             Console.WriteLine("Hp: " + Hp);
             Console.WriteLine("HpMax: " + HpMax);
+            Console.WriteLine("attacs: [");
+            Attacks.ForEach(attack => attack.Print());
+            Console.WriteLine("]");
         }
 
+        /**********************************************************************/
+        /* convertion                                                         */
+        /**********************************************************************/
+
+        private Ability AbilityFromString(string str)
+        {
+            // TODO
+            return Ability.Strength;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using CharacterSheetCreatorBack.DAL;
 using CharacterSheetCreatorBack.DbContexts;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
 
 namespace CharacterSheetCreatorBack.Controllers
 {
@@ -25,11 +26,21 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpGet("GetCharacter")]
-        public Task<Character> GetCharacter(int idPlayer, int idGame)
+        public IActionResult GetCharacter(int idPlayer, int idGame)
         {
-            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
-            Character character = new Character();
-            return Task.FromResult(character);
+            try
+            {
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character);
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to fetch the character from the database.");
+            }
         }
 
         /**********************************************************************/
@@ -38,38 +49,79 @@ namespace CharacterSheetCreatorBack.Controllers
 
 
         [HttpGet("RollInitiative")]
-        public Task<int> RollInitiative(int idPlayer, int idGame)
+        public IActionResult RollInitiative(int idPlayer, int idGame)
         {
-            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
-            Console.WriteLine("roll initiative");
-            /* return Task.FromResult(character.RollInitiative()); */
-            return Task.FromResult(10);
+            try
+            {
+                Console.WriteLine("roll initiative");
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.RollInitiative());
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to roll initiative.");
+            }
         }
 
         [HttpGet("RollAny")]
-        public Task<int> RollAny(int idPlayer, int idGame, string name)
+        public IActionResult RollAny(int idPlayer, int idGame, string name)
         {
-            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
-            Console.WriteLine("roll any");
-            /* return Task.FromResult(character.RollAny(name)); */
-            return Task.FromResult(20);
+            try
+            {
+                Console.WriteLine("roll any");
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.RollAny(name));
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to roll " + name + ".");
+            }
         }
 
         [HttpGet("RollAttack")]
-        public Task<int> RollAttack(int idPlayer, int idGame, int index)
+        public IActionResult RollAttack(int idPlayer, int idGame, int index)
         {
-            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
-            Console.WriteLine("roll attack");
-            /* return Task.FromResult(character.RollAttack(index)); */
-            return Task.FromResult(20);
+            try
+            {
+                Console.WriteLine("roll attack");
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.RollAttack(index));
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to roll the attack " + index + ".");
+            }
         }
 
         [HttpGet("RollDamage")]
-        public Task<int> RollDamage(int idPlayer, int idGame, int index)
+        public IActionResult RollDamage(int idPlayer, int idGame, int index)
         {
-            /* Character character = _characterRepo.GetCharacter(idPlayer, idGame); */
-            Console.WriteLine("roll damage");
-            return Task.FromResult(5);
+            try
+            {
+                Console.WriteLine("roll damage");
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.RollDamage(index));
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to roll the damages for the attack " + index + ".");
+            }
         }
 
         /**********************************************************************/
@@ -77,11 +129,17 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpPost("CreateCharacter")]
-        public Task<int> CreateCharacter(int idPlayer, int idGame) {
-            /* int id = _characterRepo.CreateCharacter(idPlayer, idGame) ; */
-            Console.WriteLine("create character");
-            /* return Task.FromResult(id); */
-            return Task.FromResult(1);
+        public IActionResult CreateCharacter(int idPlayer, int idGame) {
+            try
+            {
+                Console.WriteLine("create character");
+                int id = _characterRepo.CreateCharacter(idPlayer, idGame);
+                return Ok(id);
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to create a new character.");
+            }
         }
 
         /**********************************************************************/
@@ -89,25 +147,43 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpPut("UpdateCharacter")]
-        public Task<int> UpdateCharacter(Character character) {
-            /* int id = _characterRepo.UpdateCharacter(character); */
-            Console.WriteLine("update character");
-            /*Console.WriteLine(character);*/
-            character.Print();
-            /* return Task.FromResult(id); */
-            return Task.FromResult(0);
+        public IActionResult UpdateCharacter(Character character) {
+            try
+            {
+                Console.WriteLine("update character");
+                character.Print();
+                // update
+                int id = _characterRepo.UpdateCharacter(character);
+                return Ok(id);
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to update the character.");
+            }
         }
 
         [HttpPut("TakeDamage")]
-        public Task<int> TakeDamage(int idPlayer, int idGame, int amount) {
-            Character character = _characterRepo.GetCharacter(idPlayer, idGame);
-            character.Hp -= amount;
-            if (character.Hp < 0)
+        public IActionResult TakeDamage(int idPlayer, int idGame, int amount) {
+            try
             {
-                character.Hp = 0;
+                Console.WriteLine("take damages");
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                character.Hp -= amount;
+                if (character.Hp < 0)
+                {
+                    character.Hp = 0;
+                }
+                _characterRepo.UpdateCharacter(character);
+                return Ok(character.Hp);
             }
-            _characterRepo.UpdateCharacter(character);
-            return Task.FromResult(character.Hp);
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to take damages.");
+            }
         }
 
         /**********************************************************************/
@@ -116,7 +192,7 @@ namespace CharacterSheetCreatorBack.Controllers
 
         [HttpDelete("DeleteCharacter")]
         public IActionResult DeleteCharacter(int idPlayer, int idGame) {
-            /* _characterRepo.DeleteCharacter(idPlayer, idGame); */
+            _characterRepo.DeleteCharacter(idPlayer, idGame);
             Console.WriteLine("delete character");
             return StatusCode(200);
         }

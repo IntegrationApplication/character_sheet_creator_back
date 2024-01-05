@@ -54,7 +54,11 @@ namespace CharacterSheetCreatorBack.DAL
                 dbCharacter.FromCharacter(character);
 
                 // on recrée les attacks
-                dbCharacter.Attacks.ForEach(attack => _attackRepository.CreateAttack(attack));
+                dbCharacter.Attacks.ForEach(attack =>
+                {
+                    _attackRepository.CreateAttack(attack);
+                    dbCharacter.Attacks.Append(attack);
+                });
 
                 // make sure that we have the good id for the output
                 character.ID = dbCharacter.ID;

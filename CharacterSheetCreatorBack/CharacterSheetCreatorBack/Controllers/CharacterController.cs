@@ -2,6 +2,7 @@
 using CharacterSheetCreatorBack.DAL;
 using CharacterSheetCreatorBack.DbContexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System.Xml.Linq;
 
 namespace CharacterSheetCreatorBack.Controllers
@@ -132,9 +133,18 @@ namespace CharacterSheetCreatorBack.Controllers
         public IActionResult CreateCharacter(int idPlayer, int idGame) {
             try
             {
-                Console.WriteLine("create character");
-                int id = _characterRepo.CreateCharacter(idPlayer, idGame);
-                return Ok(id);
+                try
+                {
+                    // it should return null if the character isn't in the db but apparently it throws an error.
+                    Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                    return StatusCode(500, "Error: this character is already created.");
+                }
+                catch
+                {
+                    Console.WriteLine("create character");
+                    int id = _characterRepo.CreateCharacter(idPlayer, idGame);
+                    return Ok(id);
+                }
             }
             catch
             {

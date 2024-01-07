@@ -24,6 +24,12 @@ namespace CharacterSheetCreatorBack.DAL
         {
             CharacterModel? model =  _rpgContext.Characters.First<CharacterModel>(x =>
                     x.IdGame == idGame && x.IdPlayer == idPlayer);
+
+            if (model is null)
+            {
+                return null;
+            }
+
             Character character = model.ToCharacter();
             List<AttackModel> attacks = _rpgContext.Attacks.Where(a => a.CharacterModelId == model.ID).ToList();
 

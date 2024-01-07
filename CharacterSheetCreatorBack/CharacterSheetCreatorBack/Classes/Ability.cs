@@ -27,6 +27,6 @@ namespace CharacterSheetCreatorBack.Classes
         Religion,
         Sleight_of_hand,
         Stealth,
-        Survival
+        Survival,
     }
 }

@@ -1,4 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections;
+using System.ComponentModel.DataAnnotations;
+using System.IO.Pipes;
+using System.Text.RegularExpressions;
 
 namespace CharacterSheetCreatorBack.Classes
 {
@@ -53,10 +58,12 @@ namespace CharacterSheetCreatorBack.Classes
         /* roll                                                               */
         /**********************************************************************/
 
-        public int RollInitiative()
+        public string RollInitiative()
         {
             var rand = new System.Random();
-            return rand.Next() % 20 + 1 + Initiative;
+            int diceResult = rand.Next() % 20 + 1;
+            int result = diceResult + Initiative;
+            return $"{Name} rolled {result} for initiative ({diceResult} + {Initiative})";
         }
 
         private int ComputeStatBonus(int stat, bool isProefficient)
@@ -71,18 +78,20 @@ namespace CharacterSheetCreatorBack.Classes
             return result;
         }
 
-        public int RollAny(string abilityName)
+        public string RollAny(string abilityName)
         {
             var rand = new System.Random();
             int index = (int) AbilityFromString(abilityName);
             bool isProefficient = Proefficiencies[index];
             int stat = Stats[index];
             int bonus = ComputeStatBonus(stat, isProefficient);
+            int diceResult = rand.Next() % 20 + 1;
+            int result = diceResult + bonus;
 
-            return rand.Next() % 20 + 1 + bonus;
+            return $"{Name} rolled {result} for {abilityName} ({diceResult} + {bonus})";
         }
 
-        public int RollAttack(int index)
+        public string RollAttack(int index)
         {
             if (index >= Attacks.Count)
             {
@@ -93,26 +102,33 @@ namespace CharacterSheetCreatorBack.Classes
             bool isProefficient = Proefficiencies[(int) attack.LinkedAbility];
             int stat = Stats[(int) attack.LinkedAbility];
             int bonus = ComputeStatBonus(stat, isProefficient);
+            int diceResult = rand.Next() % 20 + 1;
+            int result = diceResult + bonus;
 
-            return rand.Next() % 20 + 1 + bonus;
+            return $"{Name} rolled {result} for attacking with {attack.Name} ({diceResult} + {bonus})";
         }
 
-        public int RollDamage(int index)
+        public string RollDamage(int index)
         {
             if (index >= Attacks.Count)
             {
                 throw new Exception("Error: invalid index");
             }
-            var rand = new System.Random();
 
+            string detailedResult = "";
+            var rand = new System.Random();
             Attack attack = Attacks[index];
             int result = attack.DamageBonus;
+
             // roll all dices
             for (int i = 0; i < attack.NbDices; ++i) {
-                result += rand.Next() % attack.DicesFaces + 1;
+                int diceResult = rand.Next() % attack.DicesFaces + 1;
+                result += diceResult;
+                detailedResult += $"{diceResult} + ";
             }
+            detailedResult += $"{attack.DamageBonus}";
 
-            return result;
+            return $"{Name} did {result} damage points with {attack.Name} ({detailedResult})";
         }
 
         /**********************************************************************/
@@ -141,8 +157,65 @@ namespace CharacterSheetCreatorBack.Classes
 
         private Ability AbilityFromString(string str)
         {
-            // TODO
-            return Ability.Strength;
+            Hashtable abilitiesStr = new Hashtable()
+            {
+                { "str", Ability.Strength },
+                { "strength", Ability.Strength },
+                { "dex", Ability.Dexterity },
+                { "dexterity", Ability.Dexterity },
+                { "const", Ability.Constitution },
+                { "constitution", Ability.Constitution },
+                { "int", Ability.Intelligence },
+                { "intelligence", Ability.Intelligence },
+                { "wis", Ability.Wisdom },
+                { "wisdom", Ability.Wisdom },
+                { "char", Ability.Charisma },
+                { "charisma", Ability.Charisma },
+                { "acro", Ability.Acrobatics },
+                { "acrobatics", Ability.Acrobatics },
+                { "ah", Ability.Animal_handling },
+                { "animal handling", Ability.Animal_handling },
+                { "arc", Ability.Arcana },
+                { "arcana", Ability.Arcana },
+                { "ath", Ability.Athletics },
+                { "athletics", Ability.Athletics },
+                { "dec", Ability.Deception },
+                { "deception", Ability.Deception },
+                { "his", Ability.History },
+                { "history", Ability.History },
+                { "ins", Ability.Insight },
+                { "insight", Ability.Insight },
+                { "intim", Ability.Intimidation },
+                { "intimidation", Ability.Intimidation },
+                { "inv", Ability.Investigation },
+                { "investigation", Ability.Investigation },
+                { "med", Ability.Medicine },
+                { "medicine", Ability.Medicine },
+                { "nat", Ability.Nature },
+                { "nature", Ability.Nature },
+                { "perc", Ability.Perception },
+                { "Perception", Ability.Perception },
+                { "perf", Ability.Performance },
+                { "performance", Ability.Performance },
+                { "pers", Ability.Persuasion },
+                { "persuasion", Ability.Persuasion },
+                { "rel", Ability.Religion },
+                { "religion", Ability.Religion },
+                { "soh", Ability.Sleight_of_hand },
+                { "sleight of hand", Ability.Sleight_of_hand },
+                { "ste", Ability.Stealth },
+                { "stealth", Ability.Stealth },
+                { "sur", Ability.Survival },
+                { "survival", Ability.Survival }
+            };
+            string strLower = str.ToLower();
+
+            if (!abilitiesStr.ContainsKey(strLower))
+            {
+                throw new InvalidOperationException();
+            }
+
+            return (Ability) abilitiesStr[strLower];
         }
     }
 }

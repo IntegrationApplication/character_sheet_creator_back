@@ -20,7 +20,7 @@ namespace CharacterSheetCreatorBack.DAL
         /* get                                                                */
         /**********************************************************************/
 
-        public Character? GetCharacter(int idPlayer, int idGame)
+        public Character? GetCharacter(ulong idPlayer, ulong idGame)
         {
             CharacterModel? model =  _rpgContext.Characters.First<CharacterModel>(x =>
                     x.IdGame == idGame && x.IdPlayer == idPlayer);
@@ -33,7 +33,7 @@ namespace CharacterSheetCreatorBack.DAL
             Character character = model.ToCharacter();
             List<AttackModel> attacks = _rpgContext.Attacks.Where(a => a.CharacterModelId == model.ID).ToList();
 
-            attacks.ForEach(attack => character.Attacks.Add(new Attack(attack))); 
+            attacks.ForEach(attack => character.Attacks.Add(new Attack(attack)));
             return character;
         }
 
@@ -78,7 +78,7 @@ namespace CharacterSheetCreatorBack.DAL
         /* create                                                             */
         /**********************************************************************/
 
-        public int CreateCharacter(int IdPlayer,  int IdGame)
+        public int CreateCharacter(ulong IdPlayer,  ulong IdGame)
         {
             Character newCharacter = new Character
             {
@@ -97,7 +97,7 @@ namespace CharacterSheetCreatorBack.DAL
         /* delete                                                             */
         /**********************************************************************/
 
-        public void DeleteCharacter(int idPlayer, int idGame)
+        public void DeleteCharacter(ulong idPlayer, ulong idGame)
         {
             CharacterModel? toRemove = _rpgContext.Characters.First<CharacterModel>(x =>
                     x.IdGame == idPlayer && x.IdPlayer == idGame);

@@ -27,7 +27,7 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpGet("GetCharacter")]
-        public IActionResult GetCharacter(int idPlayer, int idGame)
+        public IActionResult GetCharacter(ulong idPlayer, ulong idGame)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace CharacterSheetCreatorBack.Controllers
 
 
         [HttpGet("RollInitiative")]
-        public IActionResult RollInitiative(int idPlayer, int idGame)
+        public IActionResult RollInitiative(ulong idPlayer, ulong idGame)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
         [HttpGet("RollAny")]
-        public IActionResult RollAny(int idPlayer, int idGame, string name)
+        public IActionResult RollAny(ulong idPlayer, ulong idGame, string name)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
         [HttpGet("RollAttack")]
-        public IActionResult RollAttack(int idPlayer, int idGame, int index)
+        public IActionResult RollAttack(ulong idPlayer, ulong idGame, int index)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
         [HttpGet("RollDamage")]
-        public IActionResult RollDamage(int idPlayer, int idGame, int index)
+        public IActionResult RollDamage(ulong idPlayer, ulong idGame, int index)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpPost("CreateCharacter")]
-        public IActionResult CreateCharacter(int idPlayer, int idGame) {
+        public IActionResult CreateCharacter(ulong idPlayer, ulong idGame) {
             try
             {
                 try
@@ -173,7 +173,7 @@ namespace CharacterSheetCreatorBack.Controllers
         }
 
         [HttpPut("TakeDamage")]
-        public IActionResult TakeDamage(int idPlayer, int idGame, int amount) {
+        public IActionResult TakeDamage(ulong idPlayer, ulong idGame, int amount) {
             try
             {
                 Console.WriteLine("take damages");
@@ -201,7 +201,7 @@ namespace CharacterSheetCreatorBack.Controllers
         /**********************************************************************/
 
         [HttpDelete("DeleteCharacter")]
-        public IActionResult DeleteCharacter(int idPlayer, int idGame) {
+        public IActionResult DeleteCharacter(ulong idPlayer, ulong idGame) {
             _characterRepo.DeleteCharacter(idPlayer, idGame);
             Console.WriteLine("delete character");
             return StatusCode(200);

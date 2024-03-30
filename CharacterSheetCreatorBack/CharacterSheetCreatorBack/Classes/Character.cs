@@ -11,8 +11,8 @@ namespace CharacterSheetCreatorBack.Classes
     {
         [Key]
         public int ID { get; set; }
-        public int IdGame { get; set; }
-        public int IdPlayer { get; set; }
+        public ulong IdGame { get; set; }
+        public ulong IdPlayer { get; set; }
         public string Name { get; set; } = string.Empty;
         public string ClassName { get; set; } = string.Empty;
         public string RaceName { get; set; } = string.Empty;

@@ -5,6 +5,7 @@ This is the backend of the character sheet creator
 ## Docker
 
 ```bash
+dotnet ef migrations add InitialCreate
 docker compose up
 ```
 

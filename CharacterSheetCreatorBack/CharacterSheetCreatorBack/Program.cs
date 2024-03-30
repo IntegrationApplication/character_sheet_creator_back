@@ -18,10 +18,13 @@ builder.Services.AddCors(options => {
     });
 });
 
-// Server=(localdb)\mssqllocaldb;Database=aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502;Trusted_Connection=True;MultipleActiveResultSets=true
-/* builder.Services.AddDbContext<RpgContext>(options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=aspnet-53bc9b9d-9d6a-45d4-8429-2a2761773502;Trusted_Connection=True;MultipleActiveResultSets=true")); */
+// pour visual studio en local
+/* builder.Services.AddDbContext<RpgContext>(options => */
+/*         options.UseSqlServer(builder.Configuration.GetConnectionString("Dev")) */
+/* ); */
+// docker
 builder.Services.AddDbContext<RpgContext>(options =>
-        options.UseSqlServer("Server=sql_server2022;Database=JDRDB;User Id=SA;Password=S3cur3P@ssW0rd!;MultipleActiveResultSets=true")
+        options.UseSqlServer(builder.Configuration.GetConnectionString("Docker"))
 );
 
 var app = builder.Build();
@@ -44,5 +47,17 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors("CorsPolicy");
+
+// create migration
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<RpgContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
 
 app.Run();

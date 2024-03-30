@@ -7,6 +7,10 @@ COPY . ./
 RUN dotnet restore
 # Build and publish a release
 RUN dotnet publish -c Release -o out
+# migration (not working)
+# RUN dotnet tool install --version 6.0.9 --global dotnet-ef
+# ENV PATH="$PATH:/root/.dotnet/tools"
+# RUN dotnet ef database update # udpate the database
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0

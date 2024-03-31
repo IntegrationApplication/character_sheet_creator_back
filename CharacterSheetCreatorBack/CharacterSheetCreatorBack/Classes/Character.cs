@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.ComponentModel.DataAnnotations;
-using System.IO.Pipes;
-using System.Text.RegularExpressions;
 
 namespace CharacterSheetCreatorBack.Classes
 {
@@ -25,9 +21,9 @@ namespace CharacterSheetCreatorBack.Classes
         public int HpMax { get; set; }
         public int HitDiceNumber { get; set; }
         public int HitDiceValue { get; set; }
-        public List<int> Stats { get; set; } = new List<int>(6); // str, dex, cons, ...
-        public List<int> Skills { get; set; } = new List<int>(24); // saving throws + abilities
-        public List<bool> Proefficiencies { get; set; } = new List<bool>(24);
+        public List<int> Stats { get; set; } = new List<int>(); // str, dex, cons, ...
+        public List<int> Skills { get; set; } = new List<int>(); // saving throws + abilities
+        public List<bool> Proefficiencies { get; set; } = new List<bool>();
         public List<Attack> Attacks { get; set; } = new List<Attack>();
         public int ProefficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
@@ -38,6 +34,20 @@ namespace CharacterSheetCreatorBack.Classes
 
         public Character()
         {
+        }
+
+        public Character(ulong idPlayer, ulong idGame) {
+            this.IdPlayer = idPlayer;
+            this.IdGame = idGame;
+
+            for (int i = 0; i < 6; ++i) {
+                this.Stats.Add(10);
+            }
+
+            for (int i = 0; i < 24; ++i) {
+                this.Skills.Add(0);
+                this.Proefficiencies.Add(false);
+            }
         }
 
         /**********************************************************************/
@@ -54,6 +64,63 @@ namespace CharacterSheetCreatorBack.Classes
             return attack.DamageType;
         }
 
+        public string GetStats()
+        {
+            string result = "";
+
+            for (int i = 0; i < 6; ++i) {
+                Ability ability = (Ability) i;
+                bool isProefficient = Proefficiencies[i];
+                int bonus = ComputeStatBonus(Stats[i]);
+                string sign = bonus > 0 ? "+" : "";
+
+                result += $"- {ability.ToString()}: {Stats[i]} [{sign}{bonus}]\n";
+            }
+            return result;
+        }
+
+        public string GetWeapons()
+        {
+            string result = "";
+
+            foreach (Attack attack in Attacks) {
+                result += $"- {attack.Display()}\n";
+            }
+            return result;
+        }
+
+        public string GetSkills()
+        {
+            string result = "";
+
+            for (int i = 0; i < 6; ++i) {
+                Ability ability = (Ability) i;
+                bool isProefficient = Proefficiencies[i];
+                int bonus = ComputeStatBonus(Stats[i], isProefficient);
+                string sign = bonus > 0 ? "+" : "";
+                string proefficientSign = isProefficient ? "x" : " ";
+
+                result += $"- [{proefficientSign}] {ability.ToString()}: {Stats[i]} [{sign}{bonus}]\n";
+            }
+            return result;
+        }
+
+        public string GetSavingThrows()
+        {
+            string result = "";
+
+            for (int i = 6; i < 24; ++i) {
+                Ability ability = (Ability) i;
+                bool isProefficient = Proefficiencies[i];
+                int bonus = ComputeStatBonus(Stats[i], isProefficient);
+                string sign = bonus > 0 ? "+" : "";
+                string proefficientSign = isProefficient ? "x" : " ";
+
+                result += $"- [{proefficientSign}] {ability.ToString()}: {Stats[i]} [{sign}{bonus}]\n";
+            }
+            return result;
+        }
+
         /**********************************************************************/
         /* roll                                                               */
         /**********************************************************************/
@@ -66,10 +133,16 @@ namespace CharacterSheetCreatorBack.Classes
             return $"{Name} rolled {result} for initiative ({diceResult} + {Initiative})";
         }
 
-        private int ComputeStatBonus(int stat, bool isProefficient)
+        private int ComputeStatBonus(int stat)
         {
             double tmp = (stat - 10) / 2.0;
             int result = (int) Math.Ceiling(tmp);
+            return result;
+        }
+
+        private int ComputeStatBonus(int stat, bool isProefficient)
+        {
+            int result = ComputeStatBonus(stat);
 
             if (isProefficient)
             {
@@ -80,8 +153,12 @@ namespace CharacterSheetCreatorBack.Classes
 
         public string RollAny(string abilityName)
         {
+            Console.WriteLine($"begin roll any: {abilityName}");
             var rand = new System.Random();
             int index = (int) AbilityFromString(abilityName);
+            Console.WriteLine($"index: {index}");
+            Console.WriteLine($"Proefficiencies.Count: {Proefficiencies.Count}");
+            Console.WriteLine($"Stats.Count: {Stats.Count}");
             bool isProefficient = Proefficiencies[index];
             int stat = Stats[index];
             int bonus = ComputeStatBonus(stat, isProefficient);
@@ -209,9 +286,11 @@ namespace CharacterSheetCreatorBack.Classes
                 { "survival", Ability.Survival }
             };
             string strLower = str.ToLower();
+            Console.WriteLine($"rolling: {strLower}");
 
             if (!abilitiesStr.ContainsKey(strLower))
             {
+                Console.WriteLine("invalid argument");
                 throw new InvalidOperationException();
             }
 

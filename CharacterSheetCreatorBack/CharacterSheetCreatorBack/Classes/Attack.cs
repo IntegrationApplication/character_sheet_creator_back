@@ -49,5 +49,9 @@ namespace CharacterSheetCreatorBack.Classes
             Console.WriteLine("dice: " + NbDices + "d" + DicesFaces + " + " + DamageBonus);
             Console.WriteLine("}");
         }
+
+        public string Display() {
+            return $"{Name} ({LinkedAbility}): {NbDices}d{DicesFaces} + {DamageBonus} ({DamageType})";
+        }
     }
 }

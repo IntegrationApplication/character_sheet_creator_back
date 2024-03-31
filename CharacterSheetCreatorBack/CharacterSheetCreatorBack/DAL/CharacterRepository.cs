@@ -54,9 +54,13 @@ namespace CharacterSheetCreatorBack.DAL
                 throw new InvalidOperationException("Error: the character doesn't exist.");
             }
 
+            Console.WriteLine("delete attacks");
+
             // suppression de toutes les attacks existantes
             attacks.ForEach(attack => _attackRepository.DeleteAttack(attack.Id));
             dbCharacter.FromCharacter(character);
+
+            Console.WriteLine("update attacks");
 
             // on recrée les attacks
             character.Attacks.ForEach(attack =>
@@ -65,8 +69,12 @@ namespace CharacterSheetCreatorBack.DAL
                 _attackRepository.CreateAttack(attack, ref dbCharacter);
             });
 
+            Console.WriteLine("update id");
+
             // make sure that we have the good id for the output
             character.ID = dbCharacter.ID;
+
+            Console.WriteLine("context update");
 
             // update the db and save changes
             _rpgContext.Characters.Update(dbCharacter);
@@ -80,11 +88,7 @@ namespace CharacterSheetCreatorBack.DAL
 
         public int CreateCharacter(ulong IdPlayer,  ulong IdGame)
         {
-            Character newCharacter = new Character
-            {
-                IdPlayer = IdPlayer,
-                IdGame = IdGame
-            };
+            Character newCharacter = new Character(IdPlayer, IdGame);
             CharacterModel model = new CharacterModel(newCharacter);
 
             _rpgContext.Characters.Add(new CharacterModel(newCharacter));

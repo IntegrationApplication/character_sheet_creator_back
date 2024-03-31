@@ -2,8 +2,6 @@
 using CharacterSheetCreatorBack.DAL;
 using CharacterSheetCreatorBack.DbContexts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
-using System.Xml.Linq;
 
 namespace CharacterSheetCreatorBack.Controllers
 {
@@ -37,6 +35,74 @@ namespace CharacterSheetCreatorBack.Controllers
                     return StatusCode(500, "Error: character not found in the database.");
                 }
                 return Ok(character);
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to fetch the character from the database.");
+            }
+        }
+
+        [HttpGet("GetStats")]
+        public IActionResult GetStats(ulong idPlayer, ulong idGame) {
+            try
+            {
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.GetStats());
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to fetch the character from the database.");
+            }
+        }
+
+        [HttpGet("GetWeapons")]
+        public IActionResult GetWeapons(ulong idPlayer, ulong idGame) {
+            try
+            {
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.GetWeapons());
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to fetch the character from the database.");
+            }
+        }
+
+        [HttpGet("GetSkills")]
+        public IActionResult GetSkills(ulong idPlayer, ulong idGame) {
+            try
+            {
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.GetSkills());
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to fetch the character from the database.");
+            }
+        }
+
+        [HttpGet("GetSavingThrows")]
+        public IActionResult GetSavingThrows(ulong idPlayer, ulong idGame) {
+            try
+            {
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.GetSavingThrows());
             }
             catch
             {

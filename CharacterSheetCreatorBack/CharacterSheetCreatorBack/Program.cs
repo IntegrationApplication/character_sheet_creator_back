@@ -48,15 +48,18 @@ app.MapControllers();
 
 app.UseCors("CorsPolicy");
 
-// create migration
-using (var scope = app.Services.CreateScope())
+// create migration (`dotnet ef database update` in docker)
+if (!app.Environment.IsDevelopment())
 {
-    var services = scope.ServiceProvider;
-
-    var context = services.GetRequiredService<RpgContext>();
-    if (context.Database.GetPendingMigrations().Any())
+    using (var scope = app.Services.CreateScope())
     {
-        context.Database.Migrate();
+        var services = scope.ServiceProvider;
+
+        var context = services.GetRequiredService<RpgContext>();
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
     }
 }
 

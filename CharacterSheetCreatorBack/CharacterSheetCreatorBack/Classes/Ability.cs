@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CharacterSheetCreatorBack.Classes
+﻿namespace CharacterSheetCreatorBack.Classes
 {
     public enum Ability
     {

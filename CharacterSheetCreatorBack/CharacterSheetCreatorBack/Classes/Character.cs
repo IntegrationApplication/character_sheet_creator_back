@@ -89,7 +89,7 @@ namespace CharacterSheetCreatorBack.Classes
             return result;
         }
 
-        public string GetSkills()
+        public string GetSavingThrows()
         {
             string result = "";
 
@@ -105,18 +105,18 @@ namespace CharacterSheetCreatorBack.Classes
             return result;
         }
 
-        public string GetSavingThrows()
+        public string GetSkills()
         {
             string result = "";
 
             for (int i = 6; i < 24; ++i) {
                 Ability ability = (Ability) i;
                 bool isProefficient = Proefficiencies[i];
-                int bonus = ComputeStatBonus(Stats[i], isProefficient);
+                int bonus = ComputeStatBonus(Skills[i], isProefficient);
                 string sign = bonus > 0 ? "+" : "";
                 string proefficientSign = isProefficient ? "x" : " ";
 
-                result += $"- [{proefficientSign}] {ability.ToString()}: {Stats[i]} [{sign}{bonus}]\n";
+                result += $"- [{proefficientSign}] {ability.ToString()}: {Skills[i]} [{sign}{bonus}]\n";
             }
             return result;
         }

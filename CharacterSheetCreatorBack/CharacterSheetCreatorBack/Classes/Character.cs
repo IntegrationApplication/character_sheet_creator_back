@@ -121,6 +121,19 @@ namespace CharacterSheetCreatorBack.Classes
             return result;
         }
 
+        public string GetInfos()
+        {
+            string result = "";
+
+            result += $"- Name: {Name}\n";
+            result += $"- Hp: {Hp}\n";
+            result += $"- HpMax: {HpMax}\n";
+            result += $"- Initiative: {Initiative}\n";
+            result += $"- Spell save DC: {SpellSaveDC}\n";
+            result += $"- Spell casting ability: {SpellCastAbility}\n";
+            return result;
+        }
+
         /**********************************************************************/
         /* roll                                                               */
         /**********************************************************************/

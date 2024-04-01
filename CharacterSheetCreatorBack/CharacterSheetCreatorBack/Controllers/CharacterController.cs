@@ -110,6 +110,23 @@ namespace CharacterSheetCreatorBack.Controllers
             }
         }
 
+        [HttpGet("GetInfo")]
+        public IActionResult GetInfo(ulong idPlayer, ulong idGame) {
+            try
+            {
+                Character? character = _characterRepo.GetCharacter(idPlayer, idGame);
+                if (character is null)
+                {
+                    return StatusCode(500, "Error: character not found in the database.");
+                }
+                return Ok(character.GetInfos());
+            }
+            catch
+            {
+                return StatusCode(500, "Error: something went wrong when trying to fetch the character from the database.");
+            }
+        }
+
         /**********************************************************************/
         /* roll                                                               */
         /**********************************************************************/

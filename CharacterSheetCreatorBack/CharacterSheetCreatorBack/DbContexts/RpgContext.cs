@@ -1,63 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using CharacterSheetCreatorBack.Classes;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using CharacterSheetCreatorBack.Models;
+using CharacterSheetCreatorBack.DAL.Models;
 
 
 namespace CharacterSheetCreatorBack.DbContexts
 {
     public class RpgContext : DbContext
     {
-        public DbSet<Spell> Spells { get; set; }
-
-        public DbSet<Ability> Abilities { get; set; }
-
-        public DbSet<Skill> Skills { get; set; }
-
-        public DbSet<Class> Classes { get; set; }
-
-        public DbSet<Attack> Attacks { get; set; }
-
-        public DbSet<Character> Characters { get; set; }
+        public DbSet<AttackModel> Attacks { get; set; }
+        public DbSet<CharacterModel> Characters { get; set; }
 
 
         public RpgContext(DbContextOptions<RpgContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Spell>().ToTable("Spells");
-
-            modelBuilder.Entity<Ability>().ToTable("Abilities");
-
-            modelBuilder.Entity<Skill>().ToTable("Skills");
-
-            modelBuilder.Entity<Class>().ToTable("Classes");
-
-            modelBuilder.Entity<Attack>().ToTable("Attacks").Property(a => a.DamageDice)
-            .HasConversion(
-                v => string.Join(',', v),
-                v => v.Split(',', StringSplitOptions.None).Select(int.Parse).ToArray()
-            ).Metadata.SetValueComparer(new ValueComparer<int[]>(
-            (c1, c2) => c1.SequenceEqual(c2),
-            c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-            c => c.ToArray()
-        ));
-
-            modelBuilder.Entity<Character>(entity =>
-            {
-                entity.ToTable("Characters");
-                entity.HasMany<Ability>(c => c.Abilities);
-                entity.HasMany<Spell>(c => c.Spells);
-                entity.HasMany<Attack>(c => c.Attacks);
-                entity.HasMany<Skill>(c => c.Skills);
-                entity.HasOne<Class>(c => c.Classe);
-            });
-
+            modelBuilder.Entity<AttackModel>().ToTable("Attacks");
+            modelBuilder.Entity<CharacterModel>()
+                .ToTable("Characters")
+                .HasMany(c => c.Attacks)
+                .WithOne(a => a.CharacterModel)
+                .HasForeignKey(a => a.CharacterModelId)
+                .IsRequired(false);
         }
-
-        /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) */
-        /* { */
-        /*     base.OnConfiguring(optionsBuilder); */
-        /*     optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Database=RPG;Trusted_Connection=True;TrustServerCertificate=true;"); */
-        /* } */
     }
 }

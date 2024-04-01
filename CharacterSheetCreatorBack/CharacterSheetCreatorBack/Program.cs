@@ -10,7 +10,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<RpgContext>(options => options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Database=RPG;Trusted_Connection=True;TrustServerCertificate=true;MultipleActiveResultSets=True;"));
+builder.Services.AddCors(options => {
+    options.AddPolicy("CorsPolicy", builder => {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+// pour visual studio en local
+/* builder.Services.AddDbContext<RpgContext>(options => */
+/*         options.UseSqlServer(builder.Configuration.GetConnectionString("Dev")) */
+/* ); */
+// docker
+builder.Services.AddDbContext<RpgContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("Docker"))
+);
 
 var app = builder.Build();
 
@@ -18,7 +33,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();
@@ -26,5 +45,22 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("CorsPolicy");
+
+// create migration (`dotnet ef database update` in docker)
+if (!app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+
+        var context = services.GetRequiredService<RpgContext>();
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
+    }
+}
 
 app.Run();

@@ -1,5 +1,7 @@
 using CharacterSheetCreatorBack.Classes;
+using CharacterSheetCreatorBack.DAL.Models;
 using CharacterSheetCreatorBack.DbContexts;
+using CharacterSheetCreatorBack.Models;
 
 namespace CharacterSheetCreatorBack.DAL
 {
@@ -7,27 +9,32 @@ namespace CharacterSheetCreatorBack.DAL
     public class CharacterRepository
     {
         private readonly RpgContext _rpgContext;
+        private AttackRepository _attackRepository;
 
         public CharacterRepository(RpgContext rpgContext) {
             this._rpgContext = rpgContext;
+            this._attackRepository = new AttackRepository(rpgContext);
         }
 
         /**********************************************************************/
         /* get                                                                */
         /**********************************************************************/
 
-        public Character GetCharacter(int idPlayer, int idCharacter)
+        public Character? GetCharacter(ulong idPlayer, ulong idGame)
         {
-            try
+            CharacterModel? model =  _rpgContext.Characters.First<CharacterModel>(x =>
+                    x.IdGame == idGame && x.IdPlayer == idPlayer);
+
+            if (model is null)
             {
-                return _rpgContext.Characters.First<Character>(x =>
-                        x.ID == idCharacter && x.IdPlayer == idPlayer);
+                return null;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                throw new InvalidOperationException("The character doesn't exist.");
-            }
+
+            Character character = model.ToCharacter();
+            List<AttackModel> attacks = _rpgContext.Attacks.Where(a => a.CharacterModelId == model.ID).ToList();
+
+            attacks.ForEach(attack => character.Attacks.Add(new Attack(attack)));
+            return character;
         }
 
         /**********************************************************************/
@@ -36,26 +43,42 @@ namespace CharacterSheetCreatorBack.DAL
 
         public int UpdateCharacter(Character character)
         {
-            try
-            {
-                using var transaction = _rpgContext.Database.BeginTransaction();
+            // on ne peut pas appeler Update sur le character pris en paramètre
+            // (la méthode Update regarde la référence de l'objet).
+            CharacterModel? dbCharacter = _rpgContext.Characters.First<CharacterModel>(x =>
+                    x.IdGame == character.IdGame && x.IdPlayer == character.IdPlayer);
+            List<AttackModel> attacks = _rpgContext.Attacks.Where(a => a.CharacterModelId == dbCharacter.ID).ToList();
 
-                // on ne peut pas appeler Update sur le character pris en paramètre
-                // (la méthode Update regarde la référence de l'objet).
-                Character dbCharacter = GetCharacter(character.IdPlayer, character.ID);
-                dbCharacter.ID = character.ID;
-                // TODO: ...
-                _rpgContext.Characters.Update(dbCharacter);
-
-                // on valide les changements dans la db
-                _rpgContext.SaveChanges();
-                transaction.Commit();
-            }
-            catch (Exception e)
+            if (dbCharacter is null)
             {
-                Console.WriteLine(e.ToString());
-                throw new InvalidOperationException("The player doesn't exist.");
+                throw new InvalidOperationException("Error: the character doesn't exist.");
             }
+
+            Console.WriteLine("delete attacks");
+
+            // suppression de toutes les attacks existantes
+            attacks.ForEach(attack => _attackRepository.DeleteAttack(attack.Id));
+            dbCharacter.FromCharacter(character);
+
+            Console.WriteLine("update attacks");
+
+            // on recrée les attacks
+            character.Attacks.ForEach(attack =>
+            {
+                attack.Print();
+                _attackRepository.CreateAttack(attack, ref dbCharacter);
+            });
+
+            Console.WriteLine("update id");
+
+            // make sure that we have the good id for the output
+            character.ID = dbCharacter.ID;
+
+            Console.WriteLine("context update");
+
+            // update the db and save changes
+            _rpgContext.Characters.Update(dbCharacter);
+            _rpgContext.SaveChanges();
             return character.ID;
         }
 
@@ -63,85 +86,33 @@ namespace CharacterSheetCreatorBack.DAL
         /* create                                                             */
         /**********************************************************************/
 
-        public int CreateCharacter(int IdPlayer,  int IdGame)
+        public int CreateCharacter(ulong IdPlayer,  ulong IdGame)
         {
-            try
-            {
-                Character newCharacter = new Character
-                {
-                    IdPlayer = IdPlayer,
-                    IdGame = IdGame
-                };
+            Character newCharacter = new Character(IdPlayer, IdGame);
+            CharacterModel model = new CharacterModel(newCharacter);
 
-                _rpgContext.Characters.Add(newCharacter);
-                _rpgContext.SaveChanges();
+            _rpgContext.Characters.Add(new CharacterModel(newCharacter));
+            _rpgContext.SaveChanges();
 
-                return newCharacter.ID;
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
+            return newCharacter.ID;
         }
-
-
-        /*
-        public int CreateCharacter(Character character)
-        {
-            try
-            {
-                using var transaction = _rpgContext.Database.BeginTransaction();
-
-
-                Class? classe = _rpgContext.Classes.First<Class>(c => c.Name == character.Classe.Name);
-
-                if (classe != null)
-                {
-                    character.Classe = classe;
-                }
-                _rpgContext.Characters.Add(character);
-
-
-                // on valide les changements dans la db
-                _rpgContext.SaveChanges();
-                transaction.Commit();
-                Character? dbCharacter = _rpgContext.Characters.First<Character>(c => c.IdPlayer == character.IdPlayer && c.IdGame == character.IdGame);
-                if (dbCharacter == null) {
-                    throw new InvalidOperationException("The character doesn't exist.");
-                }
-
-
-                return dbCharacter.ID;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                throw new InvalidOperationException("The character doesn't exist.");
-            }
-        }*/
 
         /**********************************************************************/
         /* delete                                                             */
         /**********************************************************************/
 
-        public void DeleteCharacter(int idPlayer, int idCharacter)
+        public void DeleteCharacter(ulong idPlayer, ulong idGame)
         {
-            try
-            {
-                using var transaction = _rpgContext.Database.BeginTransaction();
+            CharacterModel? toRemove = _rpgContext.Characters.First<CharacterModel>(x =>
+                    x.IdGame == idPlayer && x.IdPlayer == idGame);
 
-                Character toRemove = GetCharacter(idPlayer, idCharacter);
-                // TODO: supprimer les champs compexes
+            // on supprime les attacks
+            toRemove.Attacks.ForEach(x => _attackRepository.DeleteAttack(x.Id));
+            toRemove.Attacks.Clear();
 
-                // suppression
-                _rpgContext.Characters.Remove(toRemove);
-                _rpgContext.SaveChanges();
-                transaction.Commit();
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException("Impossible to delete this character: " + e.Message);
-            }
+            // suppression
+            _rpgContext.Characters.Remove(toRemove);
+            _rpgContext.SaveChanges();
         }
     }
 }
